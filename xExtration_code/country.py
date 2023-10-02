@@ -1,5 +1,4 @@
 import csv
-
 import requests
 
 url = "https://hotels4.p.rapidapi.com/locations/v3/search"
@@ -21,7 +20,7 @@ headers = {
 }
 
 # Define the CSV file name
-csv_file = 'gaiaId_regionNames.csv'
+csv_file = 'data/gaiaId_regionNames.csv'
 
 # Create and open the CSV file for writing
 with open(csv_file, mode='w', newline='') as file:
