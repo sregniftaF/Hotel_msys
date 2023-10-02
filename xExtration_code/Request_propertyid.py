@@ -1,14 +1,17 @@
 import requests
 
-url = "https://hotels4.p.rapidapi.com/properties/list"
+url = "https://hotels4.p.rapidapi.com/properties/v2/detail"
 
-querystring = {"destinationId":"10805","pageNumber":"1","pageSize":"25","checkIn":"2023-10-15","checkOut":"2023-10-19","adults1":"1"}
-
+payload = {
+	"siteId": 300000037,
+	"propertyId": "66441177"
+}
 headers = {
+	"content-type": "application/json",
 	"X-RapidAPI-Key": "40854cf97dmsh8c61addd00b4673p1b7c49jsn8ca53f266da9",
 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
 
-response = requests.get(url, headers=headers, params=querystring)
+response = requests.post(url, json=payload, headers=headers)
 
 print(response.json())
