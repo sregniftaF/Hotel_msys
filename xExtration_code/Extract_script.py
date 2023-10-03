@@ -1,55 +1,63 @@
-import Request_modules
-
-import requests
+import Request_modules as rm
 import csv
-
-api_url = "https://hotels4.p.rapidapi.com/properties/v2/list"
-
-# opening the CSV file
-with open('Giants.csv', mode ='r')as file:
+payload = {
+    "propertyId": "66441177"
+}
+count =0 
+address_arr = []
+rs_arr = [] 
+with open('data/hotel_id.csv', mode ='r')as file:
     # reading the CSV file
     csvFile = csv.reader(file)
 
     # displaying the contents of the CSV file
     for lines in csvFile:
-        regionId = lines[0]
+        hotelId = lines[0]
+        payload = {'propertyId': hotelId}
+        count+=1
+        try:
+            resp = (rm.request_details(payload))
+        except:
+            print("No data")
+            
+            
+        try:
+            # get review score
+            propertyinfo = resp['data'].get('propertyInfo', {})
+            reviewinfo = propertyinfo.get('reviewInfo', [])
+            review_summary = reviewinfo.get('summary', [])
+            review_score = (review_summary.get('overallScoreWithDescriptionA11y', [])).get('value')
+            #print(review_score)
+
+            summary = propertyinfo.get('summary', [])
+            location = summary.get('location')
+            address = (location.get('address')).get('addressLine')
+            # print(address)
+            address_arr.append(address)
+            rs_arr.append(review_score)
+        except:
+            print("No 'data' key found in the response: {}".format(hotelId))
+        
+        if (count == 100):
+            break
+print(address_arr)
+print(rs_arr)
 
 
-payload = {
-    "siteId": 300000037,
-    "destination": {"regionId": "6348533"},
-    "checkInDate": {
-        "day": 10,
-        "month": 10,
-        "year": 2024
-    },
-    "checkOutDate": {
-        "day": 15,
-        "month": 10,
-        "year": 2024
-    },
-    "rooms": [
-        {
-            "adults": 2
-        }
-    ]
-}
-headers = {
-    "content-type": "application/json",
-    "X-RapidAPI-Key": "2ae3c4b946msh0ad4e05fa122dedp15c03fjsnb50c606376b0",
-    "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
-}
 
-response = requests.post(api_url, json=payload, headers=headers)
-resp = response.json()
-data = resp['data'].get('propertySearch', [])
-
-properties = data.get('properties')
-# Write data rows
-for item in properties:
-    try:
-        hotelId = item['id']
-        hotelName = item['name']
-        print(hotelId, hotelName)
-    except:
-        print("bubu")
+# resp = (rm.request_details(payload))
+# try:
+#     # get review score
+#     propertyinfo = resp['data'].get('propertyInfo', {})
+#     reviewinfo = propertyinfo.get('reviewInfo', [])
+#     review_summary = reviewinfo.get('summary', [])
+#     review_score = (review_summary.get('overallScoreWithDescriptionA11y', [])).get('value')
+#     #print(review_score)
+    
+#     summary = propertyinfo.get('summary', [])
+#     location = summary.get('location')
+#     address = (location.get('address')).get('addressLine')
+#     print(address)
+ 
+# except KeyError:
+#     print("No 'data' key found in the response")

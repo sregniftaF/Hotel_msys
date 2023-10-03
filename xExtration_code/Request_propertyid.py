@@ -14,4 +14,5 @@ headers = {
 
 response = requests.post(url, json=payload, headers=headers)
 
+# get image, re
 print(response.json())
