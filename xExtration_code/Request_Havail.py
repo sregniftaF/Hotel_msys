@@ -39,14 +39,24 @@ with open('data/gaiaId_regionNames.csv', mode ='r')as file:
 
         response = requests.post(api_url, json=payload, headers=headers)
         resp = response.json()
-        data = resp['data'].get('propertySearch', [])
-
-        properties = data.get('properties')
+        if resp['data'] is not None:
+            try:
+                data = resp['data'].get('propertySearch', {})
+                properties = data.get('properties', [])
+            except KeyError:
+                print("No 'data' key found in the response")
+        else:
+            print("No valid 'data' found in the response")
         # Write data rows
         for item in properties:
             try:
-                hotelId = item['id']
-                hotelName = item['name']
-                print(hotelId, hotelName)
-            except:
-                print("bubu")
+                hotelId = item.get('id')
+                hotelName = item.get('name')
+                if hotelId is not None and hotelName is not None:
+                    print(hotelId, hotelName)
+                else:
+                    print("Missing hotelId or hotelName")
+            except KeyError:
+                print("Error accessing 'id' or 'name' in property")
+            except TypeError:
+                print("Property data is not in the expected format")
