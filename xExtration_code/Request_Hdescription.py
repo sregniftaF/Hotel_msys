@@ -5,12 +5,15 @@ url = "https://hotels4.p.rapidapi.com/properties/v2/get-content"
 
 # Create a list to store the updated rows with additional data
 updated_rows = []
+count = 0
 
-with open('hotel_id_SG.csv', mode='r') as file:
+with open('/data/hotel_id.csv', mode='r') as file:
     # Reading the CSV file
     csvFile = csv.reader(file)
 
     for lines in csvFile:
+        if (count == 200):
+            break
         propertyId = lines[0]
 
         payload = {"propertyId": str(propertyId)}
@@ -42,9 +45,10 @@ with open('hotel_id_SG.csv', mode='r') as file:
             print("No valid 'data' found in the response")
 
         # Define the CSV file name
-        csv_file = 'description.csv'
+        csv_file = 'description_japan.csv'
 
         # Write the updated rows back to the CSV file
         with open(csv_file, mode='w', newline='') as file2:
             writer = csv.writer(file2)
             writer.writerows(updated_rows)
+        count+= 1
