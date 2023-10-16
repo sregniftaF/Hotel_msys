@@ -9,7 +9,8 @@ count =0
 # address_arr = []
 # rs_arr = [] 
 updated_rows = []
-with open('data/hoteldescription.csv', mode ='r')as file:
+
+with open('data/description_JAP2.csv', mode ='r')as file:
     # reading the CSV file
     csvFile = csv.reader(file)
 
@@ -56,15 +57,16 @@ with open('data/hoteldescription.csv', mode ='r')as file:
         except:
             print("No 'data' key found in the response: {}".format(hotelId))
         # if (count >20 ):
-        #     break
-        
         # Define the CSV file name
-        csv_file = 'hoteldetail.csv'
+
+
+        csv_file = 'hoteldetailJP.csv'
 
         # Write the updated rows back to the CSV file
-        with open(csv_file, mode='w', newline='') as file2:
+        with open(csv_file, mode='w', newline='' , encoding= 'utf-8') as file2:
             writer = csv.writer(file2)
             writer.writerows(updated_rows)
+
 
 # print(address_arr)
 # print(rs_arr)
