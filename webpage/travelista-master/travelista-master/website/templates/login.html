@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} 
+{% block content%}
+
+<section class="login-body">
+    <video autoplay muted loop id="myVideo">
+        <source src="{{url_for('static', filename='/img/login-bg.mp4') }}" type="video/mp4">
+    </video>
+    <!-- Login Admin -->
+    <form class="form-default" method="POST">
+        <div class="login-form">
+            <!-- logo-login -->
+            <div class="logo-login">
+                <a href="index.html"><img src="assets/img/logo/loder.png" alt=""></a>
+            </div>
+            <h2>Login Here</h2>
+            <div class="form-input">
+                <label for="name">Email</label>
+                <input  type="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-input">
+                <label for="name">Password</label>
+                <input type="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-input pt-30">
+                <input type="submit" name="submit" value="login">
+            </div>
+            
+            <!-- Forget Password -->
+            <a href="#" class="forget">Forget Password</a>
+            <!-- Forget Password -->
+            <a href="register.html" class="registration">Registration</a>
+        </div>
+    </form>
+    <!-- /end login form -->
+</section>
+
+{% endblock %}
