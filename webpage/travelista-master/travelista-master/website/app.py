@@ -21,7 +21,6 @@ mysql = MySQL(app)
 
 @app.route('/')
 @app.route('/index', methods=('GET', 'POST'))
-@app.route('/index', methods=('GET', 'POST'))
 def index():
     # Check if the user is logged in
     if 'loggedin' in session and session['loggedin']:
@@ -138,5 +137,11 @@ def signup():
 
     return render_template("signup.html")
 
+
+@app.route('/userpage')
+def userpage():
+    # Clear session data
+    return render_template('userpage.html')
+    
 if __name__ == '__main__':
     app.run(debug=True)

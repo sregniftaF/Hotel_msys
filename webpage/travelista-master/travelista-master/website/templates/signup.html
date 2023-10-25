@@ -1,41 +1,6 @@
 {% extends "base.html" %} {% block title %}Sign Up{% endblock %} 
 {% block content%}
 
-<header id="header">
-	<div class="header-top">    
-		<div class="container">
-		  <div class="row align-items-center">
-			  <div class="col-lg-6 col-sm-6 col-6 header-top-right">
-			  </div>
-		  </div>			  					
-		</div>
-	</div>
-	<div class="container main-menu">
-		<div class="row align-items-center justify-content-between d-flex">
-		  <div id="logo">
-			<a href="index.html"><img src="{{ url_for('static', filename='img/logo.png') }}" title="" /></a>
-		  </div>
-		  <nav id="nav-menu-container">
-			<ul class="nav-menu">
-			  <li><a href="index">Home</a></li>
-			  <li><a href="about.html">About</a></li>
-			  <li><a href="packages.html">Packages</a></li>
-			  <li><a href="hotels.html">Hotels</a></li>        					          		          
-			  <li><a href="contact.html">Contact</a></li>
-			  {% if session['loggedin'] %}
-			  <li><a href="index">{{account}}</a></li>
-			  <li><a href="logout">Logout</a></li>
-			  {% else %}
-			  <li><a href="login">Login</a></li>
-			  <li><a href="signup">Sign Up</a></li>
-			  {% endif %}
-			</ul>
-		  </nav><!-- #nav-menu-container -->					      		  
-		</div>
-	</div>
-</header><!-- #header -->
-
-
 <section class="register-body">
     <video autoplay muted loop id="myVideo">
         <source src="{{url_for('static', filename='/img/login-bg.mp4') }}" type="video/mp4">
