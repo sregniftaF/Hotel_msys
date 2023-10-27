@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 from flask_session import Session
+from flask_paginate import Pagination, get_page_args
 import MySQLdb.cursors
 import re
+
+def max_value(a, b):
+    return max(a, b)
+
 
 app = Flask(__name__)
 
@@ -14,6 +19,7 @@ app.config['MYSQL_USER'] = 'weekian'
 app.config['MYSQL_PASSWORD'] = '2201378@sit'
 app.config['MYSQL_DB'] = 'hotelDatabase'
 app.config['SESSION_TYPE'] = 'filesystem'
+app.jinja_env.filters['max_value'] = max_value
 
 sess.init_app(app)
 
@@ -45,14 +51,34 @@ def index():
     
     return render_template("index.html", account=account)
 
-@app.route('/hotels')
-def hotel():
+@app.route('/hotels', methods=['GET'])
+def hotels():
     # Check if the user is logged in
     if 'loggedin' in session and session['loggedin']:
         account = session['username']
     else:
         account = ""
-    return render_template("hotels.html", account=account)
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute(
+        'SELECT * FROM hotelDatabase.hotel'
+    )
+    hotel_list = cursor.fetchall()
+
+    # Pagination
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    per_page = 12  # Number of hotels to display per page
+
+    hotels_on_page = hotel_list[offset: offset + per_page]
+
+    total = len(hotel_list)
+
+    pagination = Pagination(page=page, total=total, record_name='hotels', per_page=per_page, css_framework='bootstrap4')
+
+    return render_template('hotels.html', account=account, hotels=hotels_on_page, pagination=pagination)
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

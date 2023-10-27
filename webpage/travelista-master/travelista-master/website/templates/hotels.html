@@ -10,7 +10,7 @@
 				<h1 class="text-white">
 					Hotels				
 				</h1>	
-				<p class="text-white link-nav"><a href="index.html">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="hotels.html"> Hotels</a></p>
+				<p class="text-white link-nav"><a href="index">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="hotels"> Hotels</a></p>
 			</div>	
 		</div>
 	</div>
@@ -19,355 +19,75 @@
 
 <!-- Start destinations Area -->
 <section class="destinations-area section-gap">
-	<div class="container">
-		<div class="row d-flex justify-content-center">
-			<div class="menu-content pb-40 col-lg-8">
-				<div class="title text-center">
-					<h1 class="mb-10">Popular Destinations</h1>
-					<p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast, day to.</p>
-				</div>
-			</div>
-		</div>						
-		<div class="row">
-			<div class="col-lg-4">
-				<div class="single-destinations">
-					<div class="thumb">
-						<img src="{{ url_for('static', filename='img/hotels/d1.jpg') }}" alt="">
-					</div>
-					<div class="details">
-						<h4 class="d-flex justify-content-between">
-							<span>Hilton Star Hotel</span>                              	
-							<div class="star">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>				
-							</div>	
-						</h4>
-						<p>
-							View on map   |   49 Reviews
-						</p>
-						<ul class="package-list">
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Swimming pool</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Gymnesium</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Wi-fi</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Room Service</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Air Condition</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Restaurant</span>
-								<span>Yes</span>
-							</li>												
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Price per night</span>
-								<a href="#" class="price-btn">$250</a>
-							</li>													
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="single-destinations">
-					<div class="thumb">
-						<img src="{{ url_for('static', filename='img/hotels/d2.jpg') }}" alt="">
-					</div>
-					<div class="details">
-						<h4 class="d-flex justify-content-between">
-							<span>Hilton Star Hotel</span>                              	
-							<div class="star">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>				
-							</div>	
-						</h4>
-						<p>
-							View on map   |   49 Reviews
-						</p>
-						<ul class="package-list">
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Swimming pool</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Gymnesium</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Wi-fi</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Room Service</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Air Condition</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Restaurant</span>
-								<span>Yes</span>
-							</li>												
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Price per night</span>
-								<a href="#" class="price-btn">$250</a>
-							</li>													
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="single-destinations">
-					<div class="thumb">
-						<img src="{{ url_for('static', filename='img/hotels/d3.jpg') }}" alt="">
-					</div>
-					<div class="details">
-						<h4 class="d-flex justify-content-between">
-							<span>Hilton Star Hotel</span>                              	
-							<div class="star">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>				
-							</div>	
-						</h4>
-						<p>
-							View on map   |   49 Reviews
-						</p>
-						<ul class="package-list">
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Swimming pool</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Gymnesium</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Wi-fi</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Room Service</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Air Condition</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Restaurant</span>
-								<span>Yes</span>
-							</li>												
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Price per night</span>
-								<a href="#" class="price-btn">$250</a>
-							</li>													
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="single-destinations">
-					<div class="thumb">
-						<img src="{{ url_for('static', filename='img/hotels/d4.jpg') }}" alt="">
-					</div>
-					<div class="details">
-						<h4 class="d-flex justify-content-between">
-							<span>Hilton Star Hotel</span>                              	
-							<div class="star">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>				
-							</div>	
-						</h4>
-						<p>
-							View on map   |   49 Reviews
-						</p>
-						<ul class="package-list">
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Swimming pool</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Gymnesium</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Wi-fi</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Room Service</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Air Condition</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Restaurant</span>
-								<span>Yes</span>
-							</li>												
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Price per night</span>
-								<a href="#" class="price-btn">$250</a>
-							</li>													
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="single-destinations">
-					<div class="thumb">
-						<img src="{{ url_for('static', filename='img/hotels/d5.jpg') }}" alt="">
-					</div>
-					<div class="details">
-						<h4 class="d-flex justify-content-between">
-							<span>Hilton Star Hotel</span>                              	
-							<div class="star">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>				
-							</div>	
-						</h4>
-						<p>
-							View on map   |   49 Reviews
-						</p>
-						<ul class="package-list">
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Swimming pool</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Gymnesium</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Wi-fi</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Room Service</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Air Condition</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Restaurant</span>
-								<span>Yes</span>
-							</li>												
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Price per night</span>
-								<a href="#" class="price-btn">$250</a>
-							</li>													
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="single-destinations">
-					<div class="thumb">
-						<img src="{{ url_for('static', filename='img/hotels/d6.jpg') }}" alt="">
-					</div>
-					<div class="details">
-						<h4 class="d-flex justify-content-between">
-							<span>Hilton Star Hotel</span>                              	
-							<div class="star">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>				
-							</div>	
-						</h4>
-						<p>
-							View on map   |   49 Reviews
-						</p>
-						<ul class="package-list">
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Swimming pool</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Gymnesium</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Wi-fi</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Room Service</span>
-								<span>No</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Air Condition</span>
-								<span>Yes</span>
-							</li>
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Restaurant</span>
-								<span>Yes</span>
-							</li>												
-							<li class="d-flex justify-content-between align-items-center">
-								<span>Price per night</span>
-								<a href="#" class="price-btn">$250</a>
-							</li>													
-						</ul>
-					</div>
-				</div>
-			</div>																														
-		</div>
-	</div>	
+    <div class="container">
+        <div class="row">
+            {% for hotel in hotels %}
+                <div class="col-lg-4">
+                    <div class="single-destinations">
+                        <div class="thumb">
+                            <img src="{{ url_for('static', filename='img/hotels/d6.jpg') }}" alt="">
+                        </div>
+                        <div class="details">
+                            <h4 class="d-flex justify-content-between">
+                                <span>{{ hotel[1] }}</span>
+                                <div class="star">
+                                    {% for _ in "12345" %}
+                                        <span class="fa fa-star checked"></span>
+                                    {% endfor %}
+                                </div>
+                            </h4>
+                            <p>{{ hotel[2] }} Reviews</p>
+                            <ul class="package-list">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <span>Price per night</span>
+                                    <a href="#" class="price-btn">${{ hotel[3] }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 <!-- End destinations Area -->
 
-
-<!-- Start home-about Area -->
-<section class="home-about-area">
-	<div class="container-fluid">
-		<div class="row align-items-center justify-content-end">
-			<div class="col-lg-6 col-md-12 home-about-left">
-				<h1>
-					Did not find your Package? <br>
-					Feel free to ask us. <br>
-					We‘ll make it for you
-				</h1>
-				<p>
-					inappropriate behavior is often laughed off as “boys will be boys,” women face higher conduct standards especially in the workplace. That’s why it’s crucial that, as women, our behavior on the job is beyond reproach. inappropriate behavior is often laughed.
-				</p>
-				<a href="#" class="primary-btn text-uppercase">request custom price</a>
-			</div>
-			<div class="col-lg-6 col-md-12 home-about-right no-padding">
-				<img class="img-fluid" src="{{ url_for('static', filename='img/hotels/about-img.jpg') }}" alt="">
-			</div>
-		</div>
-	</div>	
-</section>
-<!-- End home-about Area -->
+<div class="pagination">
+    <ul class="pagination">
+		<li class="page-item">
+			<a class="page-link" href="{{ url_for('hotels', page=1) }}">&laquo; first</a>
+		</li>
+        
+        {% set num_pages = 5 %}  {# Number of page numbers to show #}
+        {% set start_page = pagination.page - (num_pages // 2) %}
+        {% set end_page = start_page + num_pages - 1 %}
+        
+        {% if start_page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('hotels', page=start_page - 1) }}">...</a>
+            </li>
+        {% endif %}
+        
+        {% for page_num in range(start_page, end_page + 1) %}
+            {% if page_num >= 1 and page_num <= 20 %}
+                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('hotels', page=page_num) }}">{{ page_num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if end_page < pagination.pages | int %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('hotels', page=end_page + 1) }}">...</a>
+            </li>
+        {% endif %}
+        
+        {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('hotels', page=20) }}">&raquo; last</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
 
 {% endblock %}
