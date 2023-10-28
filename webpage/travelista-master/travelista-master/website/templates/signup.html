@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% block title %}Sign Up{% endblock %} 
+{% block content%}
+
+<section class="register-body">
+    <video autoplay muted loop id="myVideo">
+        <source src="{{url_for('static', filename='/img/login-bg.mp4') }}" type="video/mp4">
+    </video>
+    <!-- Login Admin -->
+    <form class="form-default" method="POST">
+        
+        <div class="login-form">
+            <!-- logo-login -->
+            <div class="logo-login">
+                <a href="index.html"><img src="assets/img/logo/loder.png" alt=""></a>
+            </div>
+            <h2>Registration Here</h2>
+
+            <div class="form-input">
+                <label for="name">Full name</label>
+                <input  type="text" name="name" placeholder="Full name">
+            </div>
+            <div class="form-input">
+                <label for="name">Username</label>
+                <input  type="text" name="username" placeholder="Username">
+            </div>
+            <div class="form-input">
+                <label for="name">Email Address</label>
+                <input type="email" name="email" placeholder="Email Address">
+            </div>
+            <div class="form-input">
+                <label for="name">Password</label>
+                <input type="password" name="password1" placeholder="Password">
+            </div>
+            <div class="form-input">
+                <label for="name">Confirm Password</label>
+                <input type="password" name="password2" placeholder="Confirm Password">
+            </div>
+            <div class="form-input">
+                <label for="name">Contact Number</label>
+                <input  type="text" name="contact" placeholder="Contact Number">
+            </div>
+            <div class="form-input">
+                <label for="name">DOB</label>
+                <input  type="text" name="dob" placeholder="DOB">
+            </div>
+            <div class="form-input">
+                <label for="name">Gender</label>
+                <input  type="text" name="gender" placeholder="Gender">
+            </div>
+            <div class="form-input">
+                <label for="name">Nationality</label>
+                <input  type="text" name="nationality" placeholder="Nationality">
+            </div>
+            <div class="form-input">
+                <label for="name">Passport Number</label>
+                <input  type="text" name="passport" placeholder="passport">
+            </div>
+            <div class="form-input pt-30">
+                <input type="submit" name="submit" value="signup">
+            </div>
+            <!-- Forget Password -->
+            <a href="login" class="registration" align="center">login</a>
+        </div>
+    </form>
+    <!-- /end login form -->
+</section>
+
+{% endblock %}
