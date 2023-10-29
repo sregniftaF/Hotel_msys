@@ -18,11 +18,11 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # Input old & new column names
-old_column_name = "Testing"
-new_column_name = "Testing1"
+old_column_name = "siteID"
+new_column_name = "siteId"
 
 # ALTER TABLE to rename the column
-alter_query = f"ALTER TABLE hotel CHANGE {old_column_name} {new_column_name} VARCHAR(255)"
+alter_query = f"ALTER TABLE country CHANGE {old_column_name} {new_column_name} VARCHAR(255)"
 
 # Execute the ALTER TABLE query
 cursor.execute(alter_query)
