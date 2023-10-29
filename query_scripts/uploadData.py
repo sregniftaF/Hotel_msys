@@ -19,16 +19,18 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # INSERT data into table name (row name, row name)
-insert_query = "INSERT INTO hotel (PropertyID, HotelName) VALUES (%s, %s)"
+# insert_query = "INSERT INTO hotel (PropertyID, HotelName) VALUES (%s, %s)"
 
-# Read data from CSV file and insert into the database
-with open(r"C:\Users\ZDDell\Desktop\hotel_id.csv", "r") as csv_file:
-    csv_reader = csv.reader(csv_file)
-    next(csv_reader)  # Skip the header row
+# # Read data from CSV file and insert into the database
+# with open(r"C:\Users\ZDDell\Desktop\hotel_id.csv", "r") as csv_file:
+#     csv_reader = csv.reader(csv_file)
+#     next(csv_reader)  # Skip the header row
 
-    for row in csv_reader:
-        cursor.execute(insert_query, (row[0], row[1]))
+#     for row in csv_reader:
+#         cursor.execute(insert_query, (row[0], row[1]))
 
+insert_query = "INSERT INTO country (countryName, siteID) VALUES ('JAPAN', 300000037), ('SINGAPORE', 300000040)"
+cursor.execute(insert_query)
 # Commit changes, close cursor, close connection
 conn.commit()
 cursor.close()

@@ -1,6 +1,6 @@
 import mysql.connector
 
-# Connection info
+# Replace these values with your MySQL server details
 host = "34.143.183.171"
 user = "damiansoh"
 password = "2203598@sit"
@@ -14,17 +14,16 @@ conn = mysql.connector.connect(
     database=database
 )
 
-# Create a cursor to execute SQL commands
+# Create a cursor object to execute SQL commands
 cursor = conn.cursor()
 
-# Specify the column you want to delete
-column_to_delete = "siteID"
+# Arguments for table creation
+create_table_query = """
+DROP TABLE IF EXISTS region
+"""
 
-# Construct the ALTER TABLE query to drop the column
-alter_query = f"ALTER TABLE country DROP COLUMN {column_to_delete}"
-
-# Execute the ALTER TABLE query
-cursor.execute(alter_query)
+# Execute the CREATE TABLE query
+cursor.execute(create_table_query)
 
 # Commit changes, close cursor, close connection
 conn.commit()

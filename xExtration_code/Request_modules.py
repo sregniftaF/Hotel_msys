@@ -15,9 +15,9 @@ def request_get_content(payload):
 
     #payload = { "propertyId": "46753" }
     headers = {
-        'content-type': 'application/json',
-        'X-RapidAPI-Key': '5aa6b0e70emsh72c993076ade339p15d3f6jsn34e0544938d4',
-        'X-RapidAPI-Host': 'hotels4.p.rapidapi.com'
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "f68a531d22msh0fd5494dfa334ddp111ac6jsn16c89a1595b4",
+        "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
     }
     return api_res(url,payload,headers) #response
 
@@ -27,12 +27,12 @@ def request_details(payload):
     url = "https://hotels4.p.rapidapi.com/properties/v2/detail"
 
     # payload = {
-    #     "siteId": 300000037,
+    #     "siteId": 300000040,
     #     "propertyId": "66441177"
     # }
     headers = {
-        'content-type': 'application/json',
-        'X-RapidAPI-Key': '5aa6b0e70emsh72c993076ade339p15d3f6jsn34e0544938d4',
-        'X-RapidAPI-Host': 'hotels4.p.rapidapi.com'
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "f68a531d22msh0fd5494dfa334ddp111ac6jsn16c89a1595b4",
+        "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
     }
     return api_res(url, payload, headers)

@@ -19,11 +19,10 @@ cursor = conn.cursor()
 
 # Arguments for table creation
 create_table_query = """
-CREATE TABLE IF NOT EXISTS hotel (
-    propertyID INT PRIMARY KEY,
-    hotelName VARCHAR(255),
-    hotelAddress VARCHAR(255),
-    hotelReviews VARCHAR(255)
+CREATE TABLE IF NOT EXISTS region (
+    siteId INT NOT NULL,
+    gaiaId INT PRIMARY KEY,
+    regionName VARCHAR(255)
 )
 """
 
