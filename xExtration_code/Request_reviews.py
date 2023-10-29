@@ -23,13 +23,13 @@ with open('xExtration_code/description_JP.csv', mode ='r', encoding='utf-8')as f
         # displaying the contents of the CSV file
         for lines in csvFile:
             count+=1
-            if count >1:
+            if count >210:
                 exit()
             hotelId = lines[3]
             payload = {'propertyId': hotelId}
             try:
                 resp = (rm.request_details(payload))
-                print(resp)
+                #print(resp)
             except:
                 print("No data")
                 
