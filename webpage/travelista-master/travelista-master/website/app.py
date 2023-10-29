@@ -61,7 +61,7 @@ def hotels():
     
     cursor = mysql.connection.cursor()
     cursor.execute(
-        'SELECT * FROM hotelDatabase.hotel'
+        'SELECT * FROM hotelDatabase.hotels'
     )
     hotel_list = cursor.fetchall()
 

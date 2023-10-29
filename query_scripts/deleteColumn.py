@@ -18,10 +18,10 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # Specify the column you want to delete
-column_to_delete = "Testing1"
+column_to_delete = "siteID"
 
 # Construct the ALTER TABLE query to drop the column
-alter_query = f"ALTER TABLE hotel DROP COLUMN {column_to_delete}"
+alter_query = f"ALTER TABLE country DROP COLUMN {column_to_delete}"
 
 # Execute the ALTER TABLE query
 cursor.execute(alter_query)

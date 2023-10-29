@@ -18,11 +18,11 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # Set new column name & type
-new_column_name = "Testing"
+new_column_name = "imageURL"
 new_column_data_type = "VARCHAR(255)"  # Adjust the data type based on your requirements - "INT" for integer
 
 # ALTER TABLE *table name* to add the new column
-alter_query = f"ALTER TABLE hotel ADD COLUMN {new_column_name} {new_column_data_type}"
+alter_query = f"ALTER TABLE hotels ADD COLUMN {new_column_name} {new_column_data_type}"
 
 # Execute the ALTER TABLE query
 cursor.execute(alter_query)
