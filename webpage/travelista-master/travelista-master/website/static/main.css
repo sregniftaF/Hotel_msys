@@ -2040,6 +2040,10 @@ h1, h2, h3, h4, h5, h6 {
   right: 20px;
 }
 
+.filter-sidebar {
+  position: relative;
+}
+
 /* =================================== */
 /*  Menu Styles
 /* =================================== */
@@ -2049,6 +2053,7 @@ h1, h2, h3, h4, h5, h6 {
 .header-top {
   font-size: 12px;
   padding: 6px 0px;
+  background: rgba(34, 34, 34, 0.9);
 }
 
 .header-top a {
@@ -2127,7 +2132,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #header.header-scrolled .main-menu {
-  background: transparent;
+  background: rgba(34, 34, 34, 0.9);
 }
 
 /*--------------------------------------------------------------
@@ -3462,6 +3467,24 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .destinations-area .star .checked {
   color: orange;
+}
+
+.star-container {
+  display: flex; /* Display stars in a single row */
+  align-items: center; /* Vertically center stars */
+}
+
+.star-container .fa-star.checked {
+  color: gold; /* Change the color to gold, or any other color you prefer */
+}
+.star-container .fa-star.unchecked {
+  color: grey; /* Change the color to gold, or any other color you prefer */
+}
+
+.describe {
+  width: 300px; /* Set the width to the desired fixed size */
+  height: 200px;
+  overflow: hidden; /* Hide content that overflows the width */
 }
 
 /*-------- end destinations-area Style  -------------*/

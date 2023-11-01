@@ -78,8 +78,6 @@ def hotels():
     return render_template('hotels.html', account=account, hotels=hotels_on_page, pagination=pagination)
 
 
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -168,6 +166,10 @@ def signup():
 def userpage():
     # Clear session data
     return render_template('userpage.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
     
 if __name__ == '__main__':
     app.run(debug=True)
