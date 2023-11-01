@@ -19,7 +19,7 @@ cursor = conn.cursor()
 
 # Arguments for table creation
 create_table_query = """
-DROP TABLE IF EXISTS region
+DROP TABLE IF EXISTS hotels
 """
 
 # Execute the CREATE TABLE query

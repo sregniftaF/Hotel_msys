@@ -51,7 +51,7 @@ def index():
     
     return render_template("index.html", account=account)
 
-@app.route('/hotels', methods=['GET'])
+@app.route('/hotels')
 def hotels():
     # Check if the user is logged in
     if 'loggedin' in session and session['loggedin']:
@@ -78,6 +78,19 @@ def hotels():
     return render_template('hotels.html', account=account, hotels=hotels_on_page, pagination=pagination)
 
 
+<<<<<<< HEAD
+=======
+@app.route('/hotelinfo', methods=['GET'])
+def hotelinfo():
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+    else:
+        account = ""
+
+    return render_template('hotelinfo.html', account=account)
+
+
+>>>>>>> 7e9ce52d08541efc421660f7b0c5b9a2dd24ca92
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

@@ -43,9 +43,13 @@
                         <div class="details">
                             <h4 class="d-flex justify-content-between">
                                 <span>{{ hotel[3] }}</span>
+<<<<<<< HEAD
                                 <div class="star-container"> <!-- Added class "star-container" -->
                                     {% if "Exceptional" in hotel[5] %}
                                     {% if "10.0" in hotel[5] %}
+=======
+                                <div class="star">
+>>>>>>> 7e9ce52d08541efc421660f7b0c5b9a2dd24ca92
                                     {% for _ in "12345" %}
                                         <span class="fa fa-star checked"></span>
                                     {% endfor %}
@@ -75,7 +79,7 @@
                             <ul class="package-list">
                                 <li class="d-flex justify-content-between align-items-center">
                                     <span>Price per night</span>
-                                    <a href="#" class="price-btn">${{ hotel[3] }}</a>
+                                    <a href="hotelinfo" class="price-btn">${{ hotel[3] }}</a>
                                 </li>
                             </ul>
                         </div>                        

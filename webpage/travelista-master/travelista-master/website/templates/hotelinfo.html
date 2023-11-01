@@ -1,0 +1,285 @@
+{% extends "base.html" %} {% block title %}Hotel Details{% endblock %}
+{% block content%}
+
+<!-- start banner Area -->
+<section class="about-banner relative">
+	<div class="overlay overlay-bg"></div>
+	<div class="container">
+		<div class="row d-flex align-items-center justify-content-center">
+			<div class="about-content col-lg-12">
+				<h1 class="text-white">
+					Hotels
+				</h1>
+				<p class="text-white link-nav"><a href="index">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="hotels"> Hotels</a><span class="lnr lnr-arrow-right"></span>  <a href="hotelinfo"> Hotels Details</a></p>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End banner Area -->
+
+<!-- ##### About Us Area Start ##### -->
+<section class="about-us-area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-lg-6">
+                <div class="about-text mb-100">
+                    <div class="section-heading">
+                        <div class="line-"></div>
+                        <h2>Welcome to</h2><h1 class="m-0 text-uppercase text-primary">Hotel</h1>
+                    </div>
+                    <p>Hotel Description</p>
+                    <p>Hotel Address</p>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="about-thumbnail section-padding-100">
+                    <img src="{{ url_for('static', filename='img/5.jpg')}}" width="500" height="500">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### About Us Area End ##### -->
+
+
+<!-- ##### Rooms Area Start ##### -->
+<section class="rooms-area section-padding-0-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6">
+                <div class="section-heading text-center">
+                    <div class="line-"></div>
+                    <h2>Choose a room</h2>
+                    <p>Welcome to our selection of beautifully designed and thoughtfully curated spaces. Whether you're planning a relaxing getaway, a business trip, or a special event, we offer a variety of rooms to suit your needs and preferences.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="100ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/1.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$150/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Deluxe Room</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="200ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/8.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$150/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Double Suite</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="300ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/9.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$100/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Single Room</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="100ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/15.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$150/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Executive Suite</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="200ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/16.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$150/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Superior Deluxe Studio</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="300ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/17.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$100/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Superior King Suite</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="100ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/18.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$150/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>One-Bedroom Suite</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="200ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/19.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$150/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>Mansard Studio</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <!-- Single Rooms Area -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="single-rooms-area wow fadeInUp" data-wow-delay="300ms">
+                    <!-- Thumbnail -->
+                    <div class="bg-thumbnail bg-img" style="background-image: url('/static/img/20.jpg');"></div>
+                    <!-- Price -->
+                    <p class="price-from">$100/night</p>
+                    <!-- Rooms Text -->
+                    <div class="rooms-text">
+                        <div class="line"></div>
+                        <h4>One-Bedroom Apartment</h4>
+                        <div class="mb-3 text-center">
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i> 3 Bed |</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i> 2 Bath |</small>
+                            <small><i class="fa fa-wifi text-primary me-2"></i> Wifi</small>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris sceleri sque.</p>
+                    </div>
+                    <!-- Book Room -->
+                    <a href="#" class="book-room-btn btn palatin-btn">Book Room</a>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <!-- Pagination -->
+                <div class="pagination-area wow fadeInUp" data-wow-delay="400ms">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item active"><a class="page-link" href="#">01.</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02.</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03.</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+    <!-- ##### Rooms Area End ##### -->
+{% endblock %}

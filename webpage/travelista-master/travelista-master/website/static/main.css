@@ -2722,8 +2722,9 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .section-title {
+  position: relative;
   text-align: center;
-  display: block;
+  display: inline-block;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 80px;
@@ -2732,6 +2733,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .section-title h1 {
   margin-bottom: 10px;
 }
+
 
 /*-------- Start Banner Area ------------*/
 .banner-area {
@@ -4764,3 +4766,425 @@ body.mobile-nav-active #mobile-nav-toggle {
 .footer-text a, .footer-text i {
   color: #f8b600;
 }
+
+.bg-img {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat; }
+
+.section-heading {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 60px; }
+  .section-heading .line- {
+    width: 90px;
+    height: 2px;
+    background-color: #cb8670;
+    display: block;
+    margin-bottom: 40px; }
+  .section-heading h2 {
+    font-size: 48px;
+    color: #363636; }
+    @media only screen and (min-width: 992px) and (max-width: 1199px) {
+      .section-heading h2 {
+        font-size: 40px; } }
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      .section-heading h2 {
+        font-size: 36px; } }
+    @media only screen and (max-width: 767px) {
+      .section-heading h2 {
+        font-size: 24px; } }
+  .section-heading p {
+    margin-bottom: 0; }
+  .section-heading.text-center .line- {
+    margin: 0 auto 40px; }
+  .section-heading.white h2,
+  .section-heading.white p {
+    color: #000000; }
+
+    .bg-overlay {
+  position: relative;
+  z-index: 2;
+  background-position: center center;
+  background-size: cover; }
+  .bg-overlay::after {
+    background-color: rgba(0, 0, 0, 0.63);
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: ""; }
+
+  .bg-fixed {
+  background-attachment: fixed !important; }
+
+  #scrollUp {
+  background-color: #cb8670;
+  border-radius: 0;
+  bottom: 50px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  font-size: 24px;
+  height: 40px;
+  line-height: 40px;
+  right: 50px;
+  text-align: center;
+  width: 40px;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms; }
+  #scrollUp:hover, #scrollUp:focus {
+    background-color: #363636; }
+
+ /* :: 10.0 Services Area CSS----------------------------------------------------------------------------------- */
+.services-intro {
+  position: relative;
+  z-index: 1; }
+  .services-intro .single-cool-fact {
+    width: 100%; }
+
+.core-features-area {
+  position: relative;
+  z-index: 10; }
+  .core-features-area .single-core-feature {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 514px; }
+    .core-features-area .single-core-feature .bg-thumbnail {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 5; }
+    .core-features-area .single-core-feature .feature-content {
+      width: 70%;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 50;
+      background-color: rgba(255, 255, 255, 0.85);
+      border: 2px solid #cb8670;
+      padding: 30px;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%); }
+      @media only screen and (max-width: 767px) {
+        .core-features-area .single-core-feature .feature-content {
+          width: 85%; } }
+      .core-features-area .single-core-feature .feature-content i {
+        font-size: 60px;
+        color: #cb8670;
+        margin-bottom: 30px;
+        display: block; }
+      .core-features-area .single-core-feature .feature-content h3 {
+        font-size: 30px; }
+        @media only screen and (min-width: 992px) and (max-width: 1199px) {
+          .core-features-area .single-core-feature .feature-content h3 {
+            font-size: 24px; } }
+        @media only screen and (min-width: 768px) and (max-width: 991px) {
+          .core-features-area .single-core-feature .feature-content h3 {
+            font-size: 24px; } }
+        @media only screen and (max-width: 767px) {
+          .core-features-area .single-core-feature .feature-content h3 {
+            font-size: 24px; } }
+      .core-features-area .single-core-feature .feature-content p {
+        margin-bottom: 0; }
+
+.single-service-area {
+  position: relative;
+  z-index: 1; }
+  .single-service-area i {
+    display: block;
+    margin-bottom: 30px;
+    color: #cb8670;
+    font-size: 60px; }
+  .single-service-area h4 {
+    font-size: 30px;
+    margin-bottom: 25px;
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms; }
+    @media only screen and (max-width: 767px) {
+      .single-service-area h4 {
+        font-size: 24px; } }
+  .single-service-area p {
+    margin-bottom: 0; }
+
+.our-milestones {
+  position: relative;
+  z-index: 1; }
+  .our-milestones .single-cool-fact {
+    background-color: rgba(0, 0, 0, 0.63); }
+/* end of 10.0 Services Area CSS-------------------------------------------------------------------------------- */
+
+/* :: 18.1.0 Single Cool Facts CSS------------------------------------------------------------ */
+.single-cool-fact {
+  position: relative;
+  z-index: 1;
+  width: 200px;
+  padding: 35px 15px;
+  border: 2px solid #cb8670;
+  text-align: center;
+  background-color: #363636;
+  margin: 0 auto;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms; }
+  .single-cool-fact .scf-text i {
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+    display: block;
+    font-size: 70px;
+    margin-bottom: 10px;
+    color: #cb8670; }
+  .single-cool-fact .scf-text h2 {
+    font-size: 48px;
+    margin-bottom: 5px;
+    color: #ffffff; }
+    @media only screen and (min-width: 992px) and (max-width: 1199px) {
+      .single-cool-fact .scf-text h2 {
+        font-size: 48px; } }
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      .single-cool-fact .scf-text h2 {
+        font-size: 36px; } }
+    @media only screen and (max-width: 767px) {
+      .single-cool-fact .scf-text h2 {
+        font-size: 30px; } }
+  .single-cool-fact .scf-text p {
+    font-size: 14px;
+    margin-bottom: 0;
+    color: #ffffff;
+    line-height: 1; }
+  .single-cool-fact:hover, .single-cool-fact:focus {
+    background-color: #cb8670; }
+    .single-cool-fact:hover .scf-text i, .single-cool-fact:focus .scf-text i {
+      color: #ffffff; }
+/* end of 18.1.0 Single Cool Facts CSS ---------------------------------------------------------------*/
+
+/* :: 3.3.0 Section Padding */
+.section-padding-100 {
+  padding-top: 100px;
+  padding-bottom: 100px; }
+
+.section-padding-100-0 {
+  padding-top: 50px;
+  padding-bottom: 0; }
+
+.section-padding-0-100 {
+  padding-top: 0;
+  padding-bottom: 100px; }
+
+.section-padding-100-70 {
+  padding-top: 100px;
+  padding-bottom: 70px; }
+
+  /* end of 3.3.0 Section Padding --------------------------------------------------------------------*/
+
+  /* :: 7.0 About Us Area CSS ------------------------------------------------------------------------*/
+.about-thumbnail {
+  position: relative;
+  z-index: 1; }
+  .about-thumbnail.homepage .first-img {
+    position: relative;
+    width: 10%;
+    margin-left: auto;
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.15); }
+  .about-thumbnail.homepage .second-img {
+    position: relative;
+    z-index: 1;
+    width: 55%;
+    margin-top: -50%;
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.15); }
+  .about-thumbnail.homepage .third-img {
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+    width: 45%;
+    margin-top: -30%;
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.15); }
+  /* end of 7.0 About Us Area CSS ------------------------------------------------------------------------*/
+
+  /* :: 3.8.0 Palatin Button------------------------------------------------------------------------------ */
+.palatin-btn {
+  background-color: #cb8670;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  min-width: 123px;
+  height: 53px;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 0 30px;
+  font-size: 16px;
+  line-height: 53px;
+  text-transform: capitalize; }
+  .palatin-btn:hover, .palatin-btn:focus {
+    font-size: 16px;
+    background-color: #363636;
+    color: #ffffff; }
+  .palatin-btn.btn-2 {
+    background-color: #363636;
+    color: #ffffff; }
+    .palatin-btn.btn-2:hover, .palatin-btn.btn-2:focus {
+      font-size: 16px;
+      background-color: #cb8670;
+      color: #ffffff; }
+  .palatin-btn.btn-3 {
+    background-color: #ffffff;
+    color: #cb8670;
+    border: 2px solid #cb8670;
+    height: 49px;
+    line-height: 48px; }
+    .palatin-btn.btn-3:hover, .palatin-btn.btn-3:focus {
+      font-size: 16px;
+      background-color: #cb8670;
+      color: #ffffff; }
+  /* end of 3.8.0 Palatin Button------------------------------------------------------------------------------ */
+
+  /* :: 11.0 Our Hotel Area CSS------------------------------------------------------------------------------ */
+.single-hotel-info {
+  position: relative;
+  z-index: 1; }
+  .single-hotel-info .hotel-info-text {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 45px; }
+    .single-hotel-info .hotel-info-text h6 {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -ms-grid-row-align: center;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 16px; }
+      .single-hotel-info .hotel-info-text h6 span {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 30px;
+        flex: 0 0 30px;
+        max-width: 30px;
+        width: 30px;
+        margin-right: 15px;
+        height: 30px;
+        text-align: center;
+        font-size: 12px;
+        background-color: #cb8670;
+        border-radius: 50%;
+        line-height: 30px;
+        color: #ffffff; }
+
+ /* end of 11.0 Our Hotel Area CSS------------------------------------------------------------------------------ */
+
+
+ /* :: 9.0 Rooms Area CSS -------------------------------------------------*/
+.single-rooms-area {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 515px;
+  margin-bottom: 100px;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms; }
+  .single-rooms-area .bg-thumbnail {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10; }
+  .single-rooms-area .price-from {
+    position: absolute;
+    z-index: 20;
+    top: -19px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    padding: 10px 15px;
+    background-color: #181818;
+    border: 2px solid #cb8670;
+    display: inline-block;
+    margin-bottom: 0;
+    line-height: 1;
+    color: #ffffff;
+    font-size: 14px; }
+  .single-rooms-area .rooms-text {
+    position: absolute;
+    z-index: 30;
+    background-color: rgba(0, 0, 0, 0.63);
+    padding: 30px 30px 40px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    width: calc(100% - 40px);
+    border: 2px solid #cb8670;
+    text-align: center;
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms; }
+    .single-rooms-area .rooms-text .line {
+      width: 90px;
+      height: 2px;
+      background-color: #cb8670;
+      display: block;
+      margin: 0 auto 20px; }
+    .single-rooms-area .rooms-text h4 {
+      color: #ffffff; }
+      @media only screen and (max-width: 767px) {
+        .single-rooms-area .rooms-text h4 {
+          font-size: 20px; } }
+    .single-rooms-area .rooms-text p {
+      color: #ffffff;
+      margin-bottom: 0; }
+  .single-rooms-area .book-room-btn {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    z-index: 50; }
+  .single-rooms-area:hover .rooms-text, .single-rooms-area:focus .rooms-text {
+    background-color: #000; }
+  /* end of 9.0 Rooms Area CSS -------------------------------------------------*/
+
+  .pagination-area {
+  position: relative;
+  z-index: 1;
+  text-align: center; }
+  .pagination-area .pagination {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; }
+    .pagination-area .pagination .page-item .page-link {
+      border: 2px solid transparent;
+      background-color: transparent;
+      display: block;
+      padding: 5px;
+      margin-right: 10px;
+      color: #181818;
+      font-size: 14px; }
+      .pagination-area .pagination .page-item .page-link:hover, .pagination-area .pagination .page-item .page-link:focus {
+        color: #ffffff;
+        background-color: #616161;
+        border: 2px solid #cb8670;
+        box-shadow: none; }
+    .pagination-area .pagination .page-item:first-child .page-link {
+      margin-left: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0; }
+    .pagination-area .pagination .page-item:last-child .page-link {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0; }
+    .pagination-area .pagination .page-item.active .page-link {
+      color: #ffffff;
+      background-color: #616161;
+      border: 2px solid #cb8670; }
+
+
+
+
