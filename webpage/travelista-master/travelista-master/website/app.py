@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_mysqldb import MySQL
 from flask_session import Session
 from flask_paginate import Pagination, get_page_args
+from datetime import timedelta
 import MySQLdb.cursors
 import re
 
@@ -19,6 +20,7 @@ app.config['MYSQL_USER'] = 'weekian'
 app.config['MYSQL_PASSWORD'] = '2201378@sit'
 app.config['MYSQL_DB'] = 'hotelDatabase'
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
 app.jinja_env.filters['max_value'] = max_value
 
 sess.init_app(app)
@@ -60,30 +62,31 @@ def hotels():
         account = ""
 
     # Check if the selectedValue is already stored in the session
-    selected_value = session.get('selectedValue', 'all')
+    selected_value = session.get('selectedValue')
+    region = session.get('region')
 
     if request.method == 'POST':
         selected_value = request.form.get('country')  # Retrieve the selected value from the form
         region = request.form.get('region')
-        print(region)
         session['selectedValue'] = selected_value
     # Check if hotel_list is already stored in the session
     hotel_list = session.get('hotel_list')
     
     if selected_value is None:
         session['selectedValue'] = 'all'
-            
-    if hotel_list is None or selected_value != session.get('last_selected_value'):
+        
+    if hotel_list is None or selected_value != session.get('last_selected_value') or region != session.get('region'):
         # If hotel_list is not stored or the selectedValue has changed, run the SQL query
         cursor = mysql.connection.cursor()
-        if selected_value == 'all':
+        if selected_value == 'all' or region is None:
             cursor.execute('SELECT * FROM hotelDatabase.hotels ORDER BY hotelReviews Desc;')
         else:
-            cursor.execute('SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON r.gaiaId = \
-                            h.gaiaId WHERE r.siteId = (SELECT siteId FROM hotelDatabase.country WHERE countryName = %s);', (selected_value,))
+            cursor.execute('SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s', ("%" + region + "%",))
+            print(region)
         hotel_list = cursor.fetchall()
         session['hotel_list'] = hotel_list
         session['last_selected_value'] = selected_value
+        session['region'] = region
     # Pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page = 12  # Number of hotels to display per page
@@ -98,7 +101,7 @@ def hotels():
 
     pagination = Pagination(
         page=page,
-        total=total,
+        total=total_pages,
         record_name='hotels',
         per_page=per_page,
         css_framework='bootstrap4'
@@ -112,7 +115,7 @@ def hotelinfo():
     else:
         account = ""
 
-    return render_template('hotelinfo.html', account=account)
+    return render_template('shop.html', account=account)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

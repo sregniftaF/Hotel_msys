@@ -5154,6 +5154,13 @@ body.mobile-nav-active #mobile-nav-toggle {
     background-color: #000; }
   /* end of 9.0 Rooms Area CSS -------------------------------------------------*/
 
+  #pagination-container {
+    height: 100px; /* Set the desired height in pixels */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .pagination-area {
   position: relative;
   z-index: 1;
