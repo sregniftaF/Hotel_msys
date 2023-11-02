@@ -3486,7 +3486,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .describe {
-  width: 300px; /* Set the width to the desired fixed size */
+  width: 270px; /* Set the width to the desired fixed size */
   height: 200px;
   overflow: hidden; /* Hide content that overflows the width */
 }
@@ -5194,6 +5194,8 @@ body.mobile-nav-active #mobile-nav-toggle {
       background-color: #616161;
       border: 2px solid #cb8670; }
 
-
+#hotel-description {
+  text-align: justify;
+}
 
 

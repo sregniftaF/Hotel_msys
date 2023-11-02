@@ -108,14 +108,22 @@ def hotels():
     )
     return render_template('hotels.html', account=account, hotels=hotels_on_page, pagination=pagination)
 
-@app.route('/hotelinfo', methods=['GET'])
+@app.route('/hotelinfo', methods=['POST','GET'])
 def hotelinfo():
     if 'loggedin' in session and session['loggedin']:
         account = session['username']
     else:
         account = ""
-
-    return render_template('shop.html', account=account)
+        
+    if request.method == 'POST':
+        id = request.form.get('hotelid')
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'SELECT * FROM hotelDatabase.hotels WHERE propertyId = %s', (id,)
+        )
+        hotel_info = cursor.fetchone()
+        
+    return render_template('hotelinfo.html', account=account, hotel=hotel_info)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

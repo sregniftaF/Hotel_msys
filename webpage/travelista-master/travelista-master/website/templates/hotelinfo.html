@@ -1,40 +1,28 @@
 {% extends "base.html" %} {% block title %}Hotel Details{% endblock %}
 {% block content%}
 
-<!-- start banner Area -->
-<section class="about-banner relative">
-	<div class="overlay overlay-bg"></div>
-	<div class="container">
-		<div class="row d-flex align-items-center justify-content-center">
-			<div class="about-content col-lg-12">
-				<h1 class="text-white">
-					Hotels
-				</h1>
-				<p class="text-white link-nav"><a href="index">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="hotels"> Hotels</a><span class="lnr lnr-arrow-right"></span>  <a href="hotelinfo"> Hotels Details</a></p>
-			</div>
-		</div>
-	</div>
-</section>
-<!-- End banner Area -->
+
 
 <!-- ##### About Us Area Start ##### -->
-<section class="about-us-area">
+<section class="about-us-area section-gap">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-12 col-lg-6">
                 <div class="about-text mb-100">
                     <div class="section-heading">
                         <div class="line-"></div>
-                        <h2>Welcome to</h2><h1 class="m-0 text-uppercase text-primary">Hotel</h1>
+                        <h2>Welcome to</h2><h1 class="m-0 text-uppercase text-primary">{{hotel[3]}}</h1>
                     </div>
-                    <p>Hotel Description</p>
-                    <p>Hotel Address</p>
+                    <p>{{hotel[2]}}</p>
+
+                    <i class="fa fa-map-marker" style="font-size:24px ; color:red" ></i>
+                    <a href="https://www.google.com/maps?q={{hotel[3]}}"target="_blank">{{hotel[4]}}</a>
                 </div>
             </div>
 
             <div class="col-12 col-lg-6">
                 <div class="about-thumbnail section-padding-100">
-                    <img src="{{ url_for('static', filename='img/5.jpg')}}" width="500" height="500">
+                    <img src="{{hotel[6]}}" width="500" height="500">
                 </div>
             </div>
         </div>
