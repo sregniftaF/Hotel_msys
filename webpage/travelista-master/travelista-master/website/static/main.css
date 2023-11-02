@@ -191,6 +191,7 @@ h3, .h3 {
 
 h4, .h4 {
   font-size: 18px;
+  text-align: center;
 }
 
 h5, .h5 {
@@ -1985,6 +1986,11 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.form-row {
+  text-align: center;
+
+}
+
 .form-select {
   height: 40px;
   width: 100%;
@@ -2883,10 +2889,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .single-destination .thumb {
   position: relative;
-}
-
-.single-destination .thumb img {
-  width: 100%;
 }
 
 .single-destination .desc {
