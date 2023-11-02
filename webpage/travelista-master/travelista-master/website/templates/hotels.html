@@ -1,93 +1,132 @@
-{% extends "base.html" %} {% block title %}Hotels{% endblock %} 
-{% block content%}
+    {% extends "base.html" %} {% block title %}Hotels{% endblock %} 
+    {% block content%}
 
-<!-- start banner Area -->
-<section class="about-banner relative">
-	<div class="overlay overlay-bg"></div>
-	<div class="container">				
-		<div class="row d-flex align-items-center justify-content-center">
-			<div class="about-content col-lg-12">
-				<h1 class="text-white">
-					Hotels				
-				</h1>	
-				<p class="text-white link-nav"><a href="index">Home </a>  <span class="lnr lnr-arrow-right"></span>  <a href="hotels"> Hotels</a></p>
-			</div>	
-		</div>
-	</div>
-</section>
-<!-- End banner Area -->	
+    <!-- Start destinations Area -->
+    <section class="destinations-area section-gap">
+        <div class="container text-center">
+            <form action="{{ url_for('hotels') }}" method="post">
+                <div class="form-row">
+                    <h4 class="mb-3">Filter Options</h4>
+                    <!-- Create a single row for all filter elements -->
+                    <label for="price">Price Range:</label>
+                    <div class="form-group col-md-3">
+                        <select name="price" id="price" class="form-control">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="rating">Rating:</label>
+                        <select name "rating" id="rating" class="form-control">
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <!-- Add more options as needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Apply Filters</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-<!-- Start destinations Area -->
-<section class="destinations-area section-gap">
-    <div class="container">
-        <div class="row">
-            {% for hotel in hotels %}
+        <div class="container full-width">
+            <div class="row">
+                {% for hotel in hotels %}
                 <div class="col-lg-4">
                     <div class="single-destinations">
                         <div class="thumb">
-                            <img src="{{ url_for('static', filename='img/hotels/d6.jpg') }}" alt="">
+                            <img src="{{ hotel[6] }}" alt="">
                         </div>
                         <div class="details">
                             <h4 class="d-flex justify-content-between">
                                 <span>{{ hotel[3] }}</span>
+<<<<<<< HEAD
+                                <div class="star-container"> <!-- Added class "star-container" -->
+                                    {% if "Exceptional" in hotel[5] %}
+                                    {% if "10.0" in hotel[5] %}
+=======
                                 <div class="star">
+>>>>>>> 7e9ce52d08541efc421660f7b0c5b9a2dd24ca92
                                     {% for _ in "12345" %}
                                         <span class="fa fa-star checked"></span>
                                     {% endfor %}
+                                    {% else %}
+                                        {% for _ in "1234" %}
+                                        <span class="fa fa-star checked"></span>
+                                    {% endfor %}
+                                        <span class="fa fa-star unchecked"></span>
+                                    {% endif %}
+                                    {% elif "Wonderful" or "Very good" or "Excellent" in hotel[5] %}
+                                        {% for _ in "1234" %}
+                                        <span class="fa fa-star checked"></span>
+                                        {% endfor %}
+                                        <span class="fa fa-star unchecked"></span>                                    
+                                    {% else %}
+                                        {% for _ in "123" %}
+                                        <span class="fa fa-star checked"></span>
+                                        {% endfor %}
+                                        <span class="fa fa-star unchecked"></span>
+                                        <span class="fa fa-star unchecked"></span>
+                                    {% endif %}
                                 </div>
                             </h4>
-                            <p>{{ hotel[2] }} Reviews</p>
+                            <div class="describe">
+                                <p>Description: {{ hotel[2] }}</p>
+                            </div>
                             <ul class="package-list">
                                 <li class="d-flex justify-content-between align-items-center">
                                     <span>Price per night</span>
                                     <a href="hotelinfo" class="price-btn">${{ hotel[3] }}</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
-</section>
-<!-- End destinations Area -->
+    </section>
+    <!-- End destinations Area -->
 
-<div class="pagination">
-    <ul class="pagination">
-		<li class="page-item">
-			<a class="page-link" href="{{ url_for('hotels', page=1) }}">&laquo; first</a>
-		</li>
-        
-        {% set num_pages = 5 %}  {# Number of page numbers to show #}
-        {% set start_page = pagination.page - (num_pages // 2) %}
-        {% set end_page = start_page + num_pages - 1 %}
-        
-        {% if start_page > 1 %}
+    <div class="pagination">
+        <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" href="{{ url_for('hotels', page=start_page - 1) }}">...</a>
+                <a class="page-link" href="{{ url_for('hotels', page=1) }}">&laquo; first</a>
             </li>
-        {% endif %}
-        
-        {% for page_num in range(start_page, end_page + 1) %}
-            {% if page_num >= 1 and page_num <= 20 %}
-                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                    <a class="page-link" href="{{ url_for('hotels', page=page_num) }}">{{ page_num }}</a>
+            
+            {% set num_pages = 5 %}  {# Number of page numbers to show #}
+            {% set start_page = pagination.page - (num_pages // 2) %}
+            {% set end_page = start_page + num_pages - 1 %}
+            
+            {% if start_page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('hotels', page=start_page - 1) }}">...</a>
                 </li>
             {% endif %}
-        {% endfor %}
-        
-        {% if end_page < pagination.pages | int %}
-            <li class="page-item">
-                <a class="page-link" href="{{ url_for('hotels', page=end_page + 1) }}">...</a>
-            </li>
-        {% endif %}
-        
-        {% if pagination.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="{{ url_for('hotels', page=20) }}">&raquo; last</a>
-            </li>
-        {% endif %}
-    </ul>
-</div>
+            
+            {% for page_num in range(start_page, end_page + 1) %}
+                {% if page_num >= 1 and page_num <= 20 %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('hotels', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if end_page < pagination.pages | int %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('hotels', page=end_page + 1) }}">...</a>
+                </li>
+            {% endif %}
+            
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('hotels', page=20) }}">&raquo; last</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 
-{% endblock %}
+    {% endblock %}
