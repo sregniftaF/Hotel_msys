@@ -2258,6 +2258,20 @@ user_body{
   align-items: center; /* Vertically center content */
 }
 
+/* Center the flash message, style it as needed, and set a high z-index */
+.flash-message {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 9999; /* Set a high z-index value */
+}
+
 #myVideo {
   position: fixed;
   top: 0;
@@ -2265,6 +2279,11 @@ user_body{
   width: 100%;
   height: 100%;
   object-fit: cover; /* Make the video cover the entire viewport */
+}
+
+#myTabContent {
+  height: 400px; /* Set your desired height here */
+  overflow-y: auto; /* Add vertical scroll when content exceeds the height */
 }
 
 .login-form{

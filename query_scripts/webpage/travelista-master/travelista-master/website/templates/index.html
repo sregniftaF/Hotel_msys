@@ -13,15 +13,17 @@
 					With our booking platform that offers the cheapest rate in the market!
 				</p>
 			</div>
-			<div class="col-lg-4 col-md-6 banner-right">
+			<div class="col-lg-6 col-md-6 banner-right">
 				<div class="tab-content" id="myTabContent">
-					<form class="form-wrap" method='POST' action='/index'>								
+					<form class="form-wrap" method='POST' action='/index'>
 						<input type="text" class="form-control" name="country" placeholder="Country/Cities" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Country/Cities'">
 						<input type="text" class="form-control date-picker" name="checkin" placeholder="Check in " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Check in '">
 						<input type="text" class="form-control date-picker" name="checkout" placeholder="Check out " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Check out '">
-						<input type="number" min="1" max="20" class="form-control" name="adults" placeholder="Adults " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Adults '">
-						<input type="number" min="0" max="20" class="form-control" name="child" placeholder="Child" tabindex="1">
-						<div id="container"></div>
+						<input type="number" min="1" max="10" class="form-control" name="rooms" id="roomInput" placeholder="Room " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Room '">
+						<div id="adultChildContainer" class="row align-items-center justify-content-between" style="display: none;">
+							<!-- Adult and Child columns will be added here dynamically -->
+							<div id="container" style="background: white"></div>
+						</div>
 						<input type="submit" class="primary-btn text-uppercase" name="submit" value="Search hotels">									
 					</form>
 				</div>

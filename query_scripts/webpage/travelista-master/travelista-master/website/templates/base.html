@@ -30,11 +30,11 @@
 <body>    
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class="flashes">
+        <div class="flash-message" id="flashMessage">
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
-        </ul>
+        </div>            
     {% endif %}
     {% endwith %}
     <header id="header" class="header-top">
@@ -54,10 +54,7 @@
               <nav id="nav-menu-container">
                 <ul class="nav-menu">
                   <li><a href="index">Home</a></li>
-                  <li><a href="about">About</a></li>
-                  <li><a href="packages.html">Packages</a></li>
-                  <li><a href="hotels">Hotels</a></li>        					          		          
-                  <li><a href="contact.html">Contact</a></li>
+                  <li><a href="hotels">Hotels</a></li>
                   {% if session['loggedin'] %}
                   <li><a href="userpage">{{account}}</a></li>
                   <li><a href="logout">Logout</a></li>
@@ -86,30 +83,7 @@
                             The world has become so fast paced that people don’t want to stand by reading a page of information, they would much rather look at a presentation and understand the message. It has come to a point 
                         </p>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="single-footer-widget">
-                        <h6>Navigation Links</h6>
-                        <div class="row">
-                            <div class="col">
-                                <ul>
-                                    <li><a href="#">Home</a></li>
-                                    <li><a href="#">Feature</a></li>
-                                    <li><a href="#">Services</a></li>
-                                    <li><a href="#">Portfolio</a></li>
-                                </ul>
-                            </div>
-                            <div class="col">
-                                <ul>
-                                    <li><a href="#">Team</a></li>
-                                    <li><a href="#">Pricing</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Contact</a></li>
-                                </ul>
-                            </div>										
-                        </div>							
-                    </div>
-                </div>							
+                </div>						
                 <div class="col-lg-3  col-md-6 col-sm-6">
                     <div class="single-footer-widget">
                         <h6>Newsletter</h6>
@@ -194,6 +168,51 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         });
     </script>
     <script>
+        $(document).ready(function() {
+          $('#roomInput').on('input', function() {
+            var rooms = $(this).val();
+            if (rooms >= 1) {
+              $('#adultChildContainer').empty();
+              for (var i = 1; i <= rooms; i++) {
+                var isEven = i % 2 === 0;
+                var positionClass = isEven ? 'banner-right' : 'banner-right';
+                $('#adultChildContainer').append(
+                  '<div class="col-lg-6 ' + positionClass + '">' +
+                  '<p>Room ' + i + '</p>' +
+                  '<input type="number" min="1" max="20" class="form-control" name="adults' + i + '" placeholder="Adults" onfocus="this.placeholder = \'\'" onblur="this.placeholder = \'Adults\'">' +
+                  '<input type="number" min="0" max="20" class="form-control" name="child' + i + '" placeholder="Child" tabindex="1">' +
+                  '<div id="childAgeContainer' + i + '"></div>' +
+                  '</div>'
+                );
+              }
+              $('#adultChildContainer').show();
+            } else {
+              $('#adultChildContainer').empty();
+              $('#adultChildContainer').hide();
+            }
+          });
+      
+          // Listen for changes in the child input fields
+          $('#adultChildContainer').on('input', 'input[name^="child"]', function() {
+            var roomNumber = $(this).attr('name').match(/\d+/); // Extract the room number from the input name
+            var childCount = parseInt($(this).val());
+      
+            var childAgeContainer = $('#childAgeContainer' + roomNumber);
+      
+            // Clear any previous child age inputs
+            childAgeContainer.empty();
+      
+            if (childCount > 0) {
+              for (var j = 1; j <= childCount; j++) {
+                childAgeContainer.append(
+                  '<input type="number" min="0" max="20" class="form-control" name="childAge' + roomNumber + '_' + j + '" placeholder="Child Age" tabindex="1">'
+                );
+              }
+            }
+          });
+        });
+    </script>
+    <script>
         function updateSecondSelect(selectedValue) {
             var secondSelect = document.getElementById('second-select');
 
@@ -239,7 +258,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             updateSecondSelect(storedValue);
         }
     </script>
-
     <script>
         function updateSelectedOption(selectedValue) {
             var secondSelect = document.getElementById('second-select');
@@ -257,6 +275,24 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             }
         }
     </script>
+    <script>
+        // Get a reference to the flash message element
+        const flashMessage = document.getElementById('flashMessage');
+
+        // Function to show the flash message for 2 seconds
+        function showFlashMessage(message) {
+            flashMessage.textContent = message;
+            flashMessage.style.display = 'block';
+
+            setTimeout(function() {
+                flashMessage.style.display = 'none';
+            }, 2000); // 2 seconds (2000 milliseconds)
+        }
+
+        // Call the function to display the flash message
+        showFlashMessage(flashMessage.textContent);
+    </script>
+
     
 </body>
 </html>
