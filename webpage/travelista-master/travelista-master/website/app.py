@@ -36,20 +36,32 @@ def index():
     else:
         account = ""
     
-    childage = []  # Initialize an empty list to store child ages
+    # Initialize dictionaries to store data for each room
+    room_data = {}
 
     if request.method == 'POST':
         country = request.form.get('country')
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
-        adults = request.form.get('adults')
-        child = request.form.get('child')
-        if child and int(child) > 0:
-            for i in range(1, int(child) + 1):
-                age = request.form.get('child' + str(i))
-                if age is not None:  # Check if 'age' is not None before conversion
-                    childage.append(int(age))
-        print(country, checkin, checkout, adults, child)
+        rooms = request.form.get('rooms')
+
+        # Loop through each room to collect data
+        for room_num in range(1, int(rooms) + 1):
+            room_key = f'room_{room_num}'
+            room_data[room_key] = {
+                'adults': request.form.get(f'adults{room_num}'),
+                'child': request.form.get(f'child{room_num}'),
+                'childage': []  # Initialize an empty list for child ages in each room
+            }
+
+            child_count = int(room_data[room_key]['child']) if room_data[room_key]['child'] else 0
+            if child_count > 0:
+                for i in range(1, child_count + 1):
+                    age = request.form.get(f'childage{room_num}_{i}')
+                    if age is not None:
+                        room_data[room_key]['childage'].append(int(age))
+                        
+        print(country, checkin, checkout, rooms, room_data)  # Print collected data for demonstration
     
     return render_template("index.html", account=account)
 
