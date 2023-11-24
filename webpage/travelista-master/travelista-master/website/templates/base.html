@@ -71,7 +71,7 @@
     {% block content %} {% endblock %}
 
     <!-- start footer Area -->		
-    {% if (request.path != "/login" and request.path != "/signup")%}
+    {% if (request.path != "/login" and request.path != "/signup" and request.path !="/userpage")%}
     <footer class="footer-area section-gap">
         <div class="container">
 

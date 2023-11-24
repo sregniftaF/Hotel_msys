@@ -6,6 +6,7 @@ from datetime import timedelta
 import MySQLdb.cursors
 import re
 
+
 def max_value(a, b):
     return max(a, b)
 
@@ -27,6 +28,7 @@ sess.init_app(app)
 
 mysql = MySQL(app)
 
+
 @app.route('/')
 @app.route('/index', methods=('GET', 'POST'))
 def index():
@@ -35,7 +37,7 @@ def index():
         account = session['username']
     else:
         account = ""
-    
+
     # Initialize dictionaries to store data for each room
     room_data = {}
 
@@ -62,10 +64,11 @@ def index():
                         room_data[room_key]['childage'].append(int(age))
                         
         print(country, checkin, checkout, rooms, room_data)  # Print collected data for demonstration
-    
+
     return render_template("index.html", account=account)
 
-@app.route('/hotels', methods=["GET","POST"])
+
+@app.route('/hotels', methods=["GET", "POST"])
 def hotels():
     # Check if the user is logged in
     if 'loggedin' in session and session['loggedin']:
@@ -83,17 +86,19 @@ def hotels():
         session['selectedValue'] = selected_value
     # Check if hotel_list is already stored in the session
     hotel_list = session.get('hotel_list')
-    
+
     if selected_value is None:
         session['selectedValue'] = 'all'
-        
+
     if hotel_list is None or selected_value != session.get('last_selected_value') or region != session.get('region'):
         # If hotel_list is not stored or the selectedValue has changed, run the SQL query
         cursor = mysql.connection.cursor()
         if selected_value == 'all' or region is None:
             cursor.execute('SELECT * FROM hotelDatabase.hotels ORDER BY hotelReviews Desc;')
         else:
-            cursor.execute('SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s', ("%" + region + "%",))
+            cursor.execute(
+                'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s',
+                ("%" + region + "%",))
             print(region)
         hotel_list = cursor.fetchall()
         session['hotel_list'] = hotel_list
@@ -120,13 +125,14 @@ def hotels():
     )
     return render_template('hotels.html', account=account, hotels=hotels_on_page, pagination=pagination)
 
-@app.route('/hotelinfo', methods=['POST','GET'])
+
+@app.route('/hotelinfo', methods=['POST', 'GET'])
 def hotelinfo():
     if 'loggedin' in session and session['loggedin']:
         account = session['username']
     else:
         account = ""
-        
+
     if request.method == 'POST':
         id = request.form.get('hotelid')
         cursor = mysql.connection.cursor()
@@ -134,8 +140,9 @@ def hotelinfo():
             'SELECT * FROM hotelDatabase.hotels WHERE propertyId = %s', (id,)
         )
         hotel_info = cursor.fetchone()
-        
+
     return render_template('hotelinfo.html', account=account, hotel=hotel_info)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -159,12 +166,14 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     # Clear session data
     session.clear()
     flash("Successfully signed out")
     return redirect(url_for('index'))
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -221,14 +230,168 @@ def signup():
     return render_template("signup.html")
 
 
-@app.route('/userpage')
+@app.route('/userpage', methods=['GET', 'POST'])
 def userpage():
-    # Clear session data
-    return render_template('userpage.html')
+    existing_account = {}
+    account = {}
+    # Validate if user is login, if not, redirect to login page
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+        # Retrieve user info from DB
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'])
+        )
+        existing_account = cursor.fetchone()
+    else:
+        account = ""
+        return render_template("login.html")
+
+    if request.method == 'POST':
+        isDelete = request.form.get("delete")
+        if isDelete == "delete":
+            # Delete Account
+            cursor = mysql.connection.cursor()
+            cursor.execute(
+                'DELETE FROM hotelDatabase.customer WHERE customerID = %s', (session['id'])
+            )
+            mysql.connection.commit()
+            flash('Delete Account!')
+            session.clear()
+            flash("Successfully signed out")
+            return redirect(url_for('index'))
+        else:
+            name = request.form.get('customerName')
+            username = request.form.get('userName')
+            contact = request.form.get('contactNum')
+            dob = request.form.get('dob')
+            nationality = request.form.get('nation')
+            email = request.form.get('email')
+            passport = request.form.get('passport')
+            if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                flash('Invalid email address !')
+            elif not re.match(r'[A-Za-z0-9]+', username) or len(username) < 1:
+                flash('name must contain only characters and numbers !')
+            elif len(name) < 3:
+                flash('Name must be greater than 3 character.')
+            else:
+                cursor.execute(
+                    """
+                    UPDATE hotelDatabase.customer 
+                    SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
+                    WHERE customerID = %s
+                    """,
+                    (name, username, contact, dob, nationality, email, passport, session['id'])
+                )
+                mysql.connection.commit()
+                flash('Account changed!')
+                cursor.execute(
+                    'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'])
+                )
+                existing_account = cursor.fetchone()
+
+    return render_template('userpage.html', account=account, user=existing_account)
+
+
+
 
 @app.route('/about')
 def about():
     return render_template('about.html')
-    
+
+
+@app.route("/user/bookings", methods=['GET', 'POST'])
+def userBookings():
+    # Validate if user is login, if not, redirect to login page
+    bookings = []
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+    else:
+        account = ""
+        #return render_template("login.html")
+
+    if request.method == 'POST':
+        # Delete booking from DB
+        booking_id = request.form.get("booking_id")
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'DELETE FROM hotelDatabase.booking WHERE bookingId = %s', (booking_id)
+        )
+        mysql.connection.commit()
+
+        cursor.execute("""
+            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate
+            FROM hotelDatabase.hotels AS h
+            INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
+            WHERE b.customerID = %s
+        """, (session['id'])
+        )
+
+        bookings = cursor.fetchall()
+    else:
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate
+            FROM hotelDatabase.hotels AS h
+            INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
+            WHERE b.customerID = %s
+        """, (session['id'])
+                       )
+        bookings = cursor.fetchall()
+
+    return render_template("userBooking.html", account=session['username'], bookings=bookings)
+
+
+@app.route("/user/password", methods=['GET', 'POST'])
+def userPagePassword():
+    # Validate if user is login, if not, redirect to login page
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+    else:
+        account = ""
+        return render_template("login.html")
+
+    msg = {
+        "is_error": False,
+        "msg": ""
+    }
+
+    if request.method == 'POST':
+        email = session['email']
+        old_pwd = request.form.get('old_pwd')
+        new_pwd = request.form.get('new_pwd')
+        confirm_pwd = request.form.get("confirm_pwd")
+
+        if new_pwd != confirm_pwd:
+            msg["is_error"] = True
+            msg["msg"] = "Please check your password, doesn't match"
+            return render_template("userPassword.html", account=session['username'], msg=msg)
+
+        # Get user info and compare password
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'SELECT * FROM hotelDatabase.customer WHERE email = %s AND userPassword = %s', (email, old_pwd)
+        )
+        account = cursor.fetchone()
+
+        if account is None:
+            msg["is_error"] = True
+            msg["msg"] = "Please check your passwords, invalid password"
+            return render_template("userPassword.html", account=session['username'], msg=msg)
+
+        # Update user password
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'UPDATE hotelDatabase.customer SET userPassword = %s WHERE email = %s AND userPassword = %s',
+            (new_pwd, email, old_pwd)
+        )
+        mysql.connection.commit()
+
+        msg["is_error"] = False
+        msg["msg"] = "Successfully updated password"
+
+    return render_template("userPassword.html", account=session['username'], msg=msg)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

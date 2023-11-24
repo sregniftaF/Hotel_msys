@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} 
+{% block content%}
+'''
+hello
+'''
+<section class="login-body">
+<div class="container emp-profile">
+	<div class="row">
+		<div class="col-md-3 ">
+		     <div class="list-group ">
+              <a href="#" class="list-group-item list-group-item-action active">Edit profile</a>
+              <a href="#" class="list-group-item list-group-item-action">Bookings</a>
+              <a href="#" class="list-group-item list-group-item-action active">Change password</a>
+              
+            </div> 
+		</div>
+		<div class="col-md-9">
+		    <div class="card">
+		        <div class="card-body">
+		            <div class="row">
+		                <div class="col-md-12">
+		                    <h4>Your Profile</h4>
+		                    <hr>
+		                </div>
+		            </div>
+		            <div class="row">
+		                <div class="col-md-12">
+		                    <form method="POST" action="/userpage">
+                              <div class="form-group row">
+                                <label for="userID" class="col-4 col-form-label">User ID</label>
+                                <div class="col-8">
+                                  <input id="userID" name="userID" placeholder="{{ user_id }}" class="form-control here" type="text" readonly>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="customerName" class="col-4 col-form-label">Customer Name</label>
+                                <div class="col-8">
+                                  <input id="customerName" name="customerName" placeholder="{{ customer_name }}" class="form-control here" type="text" readonly>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="userName" class="col-4 col-form-label">User Name</label>
+                                <div class="col-8">
+                                  <input id="userName" name="userName" placeholder="User Name" class="form-control here" type="text">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="ContactNum" class="col-4 col-form-label">Contact number</label>
+                                <div class="col-8">
+                                  <input id="contactNum" name="contactNum" placeholder="xxxx xxxx" class="form-control here" required="required" type="text">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="select" class="col-4 col-form-label">Gender</label>
+                                <div class="col-8">
+                                  <select id="select" name="select" class="custom-select">
+                                    <option value="admin">Female</option>
+                                    <option value="admin">Male</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="dob" class="col-4 col-form-label">Date Of Birth</label>
+                                <div class="col-8">
+                                  <input id="dob" name="dob" placeholder="{{ dob }}" class="form-control here" type="text" readonly>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="nation" class="col-4 col-form-label">Nationality</label>
+                                <div class="col-8">
+                                  <input id="nation" name="nation" placeholder="{{ user_email }}" class="form-control here" type="text" readonly>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="email" class="col-4 col-form-label">Email</label>
+                                <div class="col-8">
+                                  <input id="email" name="email" placeholder="{{ user_email }}" class="form-control here" type="text" readonly>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="offset-4 col-8">
+                                  <button name="submit" type="submit" class="btn btn-primary">Update My Profile</button>
+                                </div>
+                              </div>
+                            </form>
+		                </div>
+		            </div>
+		            
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
+</section>
+{% endblock %}
