@@ -40,6 +40,9 @@ def index():
 
     # Initialize dictionaries to store data for each room
     room_data = {}
+    r_adult = []
+    r_child = []
+    r_childage = []
 
     if request.method == 'POST':
         country = request.form.get('country')
@@ -64,6 +67,30 @@ def index():
                         room_data[room_key]['childage'].append(int(age))
                         
         print(country, checkin, checkout, rooms, room_data)  # Print collected data for demonstration
+
+        if checkin and checkout is not None:
+            # pass checkin, checkout, room_data and rooms via session
+            checkinyear = int(checkin[6:10])
+            checkinmonth = int(checkin[0:2])
+            checkinday = int(checkin[3:5])
+            new_checkin = str(checkinyear) + '-' + str(checkinmonth) + '-' + str(checkinday)
+            checkoutyear = int(checkout[6:10])
+            checkoutmonth = int(checkout[0:2])
+            checkoutday = int(checkout[3:5])
+            new_checkout = str(checkoutyear) + '-' + str(checkoutmonth) + '-' + str(checkoutday)
+            session['checkin'] = new_checkin
+            session['checkout'] = new_checkout
+            session['rooms'] = rooms
+            session['room_data'] = room_data
+
+            # get duration of stay and pass to other pages via session
+            if checkinmonth == checkoutmonth:
+                duration = checkoutday - checkinday
+            else:
+                duration1 = 31 - checkinday
+                duration2 = checkoutday - 0
+                duration = duration1 + duration2
+            session['duration'] = str(duration)
 
     return render_template("index.html", account=account)
 
@@ -140,7 +167,7 @@ def hotelinfo():
             'SELECT * FROM hotelDatabase.hotels WHERE propertyId = %s', (id,)
         )
         hotel_info = cursor.fetchone()
-
+        session['p_id'] = id
     return render_template('hotelinfo.html', account=account, hotel=hotel_info)
 
 
@@ -400,6 +427,7 @@ def hotelbooking():
         n_pax = '1'
         r_d = session.get('room_data')
         t_room = session.get('rooms')
+
         for room_num in range(1, int(t_room) + 1):
             x = r_d.get(f'room_{room_num}')
             print(x.get('adults'), x.get('child'), x.get('childage'))
