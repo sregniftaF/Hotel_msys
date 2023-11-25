@@ -382,6 +382,35 @@ def userPagePassword():
 
     return render_template("userPassword.html", account=session['username'], msg=msg)
 
+@app.route('/hotelBooking', methods=['POST', 'GET'])
+def hotelbooking():
+    check_in = session.get('checkin')
+    check_out = session.get('checkout')
+    date_duration = session.get('duration')
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+    else:
+        account = ""
+
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+
+        rtype = 'single'
+        t_price = '10'
+        n_pax = '1'
+        r_d = session.get('room_data')
+        t_room = session.get('rooms')
+        for room_num in range(1, int(t_room) + 1):
+            x = r_d.get(f'room_{room_num}')
+            print(x.get('adults'), x.get('child'), x.get('childage'))
+
+        print(rtype, t_price, n_pax, check_in, check_out, date_duration, r_d)
+        cursor.execute(
+            'INSERT into hotelDatabase.booking VALUES( NULL, %s, %s, %s, %s, %s, %s, %s, %s)',
+            (session['id'], session['p_id'], rtype, n_pax, t_price, check_in, check_out, date_duration)
+        )
+        mysql.connection.commit()
+    return render_template('hotelBooking.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
