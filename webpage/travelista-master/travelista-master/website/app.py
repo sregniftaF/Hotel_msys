@@ -3,13 +3,22 @@ from flask_mysqldb import MySQL
 from flask_session import Session
 from flask_paginate import Pagination, get_page_args
 from datetime import timedelta
+from datetime import datetime
+import json
 import MySQLdb.cursors
+import requests
 import re
 
 
 def max_value(a, b):
     return max(a, b)
 
+url = "https://hotels4.p.rapidapi.com/properties/v2/get-offers"
+headers = {
+	"content-type": "application/json",
+	"X-RapidAPI-Key": "d54251d0d0msh2c71c303b8b375ap16db3bjsn6835d5c34d91",
+	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
+}
 
 app = Flask(__name__)
 
@@ -37,61 +46,63 @@ def index():
         account = session['username']
     else:
         account = ""
-
-    # Initialize dictionaries to store data for each room
-    room_data = {}
-    r_adult = []
-    r_child = []
-    r_childage = []
-
+    rooms_data = []
+    
     if request.method == 'POST':
-        country = request.form.get('country')
+        session['country'] = request.form.get('country')
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
-        rooms = request.form.get('rooms')
-
-        # Loop through each room to collect data
-        for room_num in range(1, int(rooms) + 1):
-            room_key = f'room_{room_num}'
-            room_data[room_key] = {
-                'adults': request.form.get(f'adults{room_num}'),
-                'child': request.form.get(f'child{room_num}'),
-                'childage': []  # Initialize an empty list for child ages in each room
+        session['rooms'] = request.form.get('rooms')
+        session['adults'] = 0
+        session['child'] = 0
+        for room_num in range(1, int(session['rooms']) + 1):
+            session['adults'] += int(request.form.get(f'adults{room_num}'))
+            room_data = {
+                'adults': int(request.form.get(f'adults{room_num}')),
+                'children': []
             }
 
-            child_count = int(room_data[room_key]['child']) if room_data[room_key]['child'] else 0
+            child_count = int(request.form.get(f'child{room_num}')) if request.form.get(f'child{room_num}') else 0
+            session['child'] += child_count
             if child_count > 0:
+                children = []
                 for i in range(1, child_count + 1):
                     age = request.form.get(f'childage{room_num}_{i}')
-                    if age is not None:
-                        room_data[room_key]['childage'].append(int(age))
-                        
-        print(country, checkin, checkout, rooms, room_data)  # Print collected data for demonstration
-
-        if checkin and checkout is not None:
-            # pass checkin, checkout, room_data and rooms via session
-            checkinyear = int(checkin[6:10])
-            checkinmonth = int(checkin[0:2])
-            checkinday = int(checkin[3:5])
-            new_checkin = str(checkinyear) + '-' + str(checkinmonth) + '-' + str(checkinday)
-            checkoutyear = int(checkout[6:10])
-            checkoutmonth = int(checkout[0:2])
-            checkoutday = int(checkout[3:5])
-            new_checkout = str(checkoutyear) + '-' + str(checkoutmonth) + '-' + str(checkoutday)
-            session['checkin'] = new_checkin
-            session['checkout'] = new_checkout
-            session['rooms'] = rooms
-            session['room_data'] = room_data
-
-            # get duration of stay and pass to other pages via session
-            if checkinmonth == checkoutmonth:
-                duration = checkoutday - checkinday
-            else:
-                duration1 = 31 - checkinday
-                duration2 = checkoutday - 0
-                duration = duration1 + duration2
-            session['duration'] = str(duration)
-
+                    if age and age.strip():  # Check if 'age' is not empty or whitespace
+                        children.append({'age': int(age)})
+                room_data['children'] = children
+            
+            rooms_data.append(room_data)
+            
+            checkin_date = datetime.strptime(checkin, "%m/%d/%Y") 
+            checkout_date = datetime.strptime(checkout, "%m/%d/%Y")
+            session['checkin'] = checkin_date.strftime('%Y-%m-%d')
+            session['checkout'] = checkout_date.strftime('%Y-%m-%d')
+            
+            cursor = mysql.connection.cursor()
+            cursor.execute(
+                'SELECT gaiaId FROM hotelDatabase.region WHERE regionName LIKE %s',
+                    ("%" + session['country'] + "%",)
+            )
+            regionid = cursor.fetchone()
+            reservation_data = {
+                "propertyId": "nil",
+                "checkInDate": { 
+                    "day": checkin_date.day, 
+                    "month":  checkin_date.month, 
+                    "year": checkin_date.year 
+                }, 
+                "checkOutDate": { 
+                    "day": checkout_date.day, 
+                    "month": checkout_date.month, 
+                    "year": checkout_date.year 
+                }, 
+                "destination": { 
+                    "regionId": "nil"
+                },
+                "rooms": rooms_data
+            }
+        return redirect(url_for('hotels', reservation_data=json.dumps(reservation_data)))
     return render_template("index.html", account=account)
 
 
@@ -103,34 +114,61 @@ def hotels():
     else:
         account = ""
 
-    # Check if the selectedValue is already stored in the session
-    selected_value = session.get('selectedValue')
-    region = session.get('region')
-
-    if request.method == 'POST':
-        selected_value = request.form.get('country')  # Retrieve the selected value from the form
-        region = request.form.get('region')
-        session['selectedValue'] = selected_value
-    # Check if hotel_list is already stored in the session
-    hotel_list = session.get('hotel_list')
-
-    if selected_value is None:
-        session['selectedValue'] = 'all'
-
-    if hotel_list is None or selected_value != session.get('last_selected_value') or region != session.get('region'):
-        # If hotel_list is not stored or the selectedValue has changed, run the SQL query
+    # # Check if the selectedValue is already stored in the session
+    # selected_value = session.get('selectedValue')
+    # region = session.get('region')
+    
+    if request.method == 'GET':
+        reservation_data = request.args.get('reservation_data')
+        json_temp = json.loads(reservation_data)
         cursor = mysql.connection.cursor()
-        if selected_value == 'all' or region is None:
-            cursor.execute('SELECT * FROM hotelDatabase.hotels ORDER BY hotelReviews Desc;')
-        else:
-            cursor.execute(
-                'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s',
-                ("%" + region + "%",))
-            print(region)
+        cursor.execute(
+                '       ',
+                ("%" + session['country'] + "%",))
         hotel_list = cursor.fetchall()
-        session['hotel_list'] = hotel_list
-        session['last_selected_value'] = selected_value
-        session['region'] = region
+        i = 0
+        for hotel in hotel_list:
+            json_temp['propertyId'] = str(hotel[1]) #change the name in the jsontemp 
+            json_temp['destination']['regionId'] = str(hotel[0]) # change the region if for each temp
+            cursor.execute(
+                'SELECT * FROM hotelDatabase.cache_collection WHERE propertyId = %s AND checkIn = %s AND checkOut = %s AND adult = %s AND child = %s;',
+                (hotel[1], session['checkin'], session['checkout'], session['adults'], session['child'],)
+            )
+            check_exist_request = cursor.fetchone()
+            if check_exist_request is None:
+                response = requests.post(url, json=json_temp, headers=headers)
+                res = response.json()
+                dump_res = json.dumps(res)
+                cursor.execute(
+                    'INSERT INTO hotelDatabase.cache_collection VALUES (%s, %s, %s, %s, %s, %s)', (hotel[1],session['checkin'], session['checkout'], session['adults'], session['child'], dump_res,)
+                )
+                mysql.connection.commit()
+
+    # if request.method == 'POST':
+    #     selected_value = request.form.get('country')  # Retrieve the selected value from the form
+    #     region = request.form.get('region')
+    #     session['selectedValue'] = selected_value
+    # # Check if hotel_list is already stored in the session
+    # hotel_list = session.get('hotel_list')
+
+    # if selected_value is None:
+    #     session['selectedValue'] = 'all'
+
+    # if hotel_list is None or selected_value != session.get('last_selected_value') or region != session.get('region'):
+    #     # If hotel_list is not stored or the selectedValue has changed, run the SQL query
+    #     cursor = mysql.connection.cursor()
+    #     if selected_value == 'all' or region is None:
+    #         cursor.execute('SELECT * FROM hotelDatabase.hotels ORDER BY hotelReviews Desc;')
+    #     else:
+    #         cursor.execute(
+    #             'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s',
+    #             ("%" + region + "%",))
+    #         print(region)
+    #     hotel_list = cursor.fetchall()
+    #     session['hotel_list'] = hotel_list
+    #     session['last_selected_value'] = selected_value
+    #     session['region'] = region
+    
     # Pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page = 12  # Number of hotels to display per page
