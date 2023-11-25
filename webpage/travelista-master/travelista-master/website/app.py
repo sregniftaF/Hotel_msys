@@ -254,7 +254,6 @@ def userpage():
             mysql.connection.commit()
             flash('Delete Account!')
             session.clear()
-            flash("Successfully signed out")
             return redirect(url_for('index'))
         else:
             name = request.form.get('customerName')
@@ -277,7 +276,7 @@ def userpage():
                     SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
                     WHERE customerID = %s
                     """,
-                    (name, username, contact, dob, nationality, email, passport, session['id'],)
+                    (name, username, contact, dob, nationality, email, passport, session['id'])
                 )
                 mysql.connection.commit()
                 flash('Account changed!')
@@ -298,14 +297,6 @@ def about():
 
 @app.route("/user/bookings", methods=['GET', 'POST'])
 def userBookings():
-    # Validate if user is login, if not, redirect to login page
-    bookings = []
-    if 'loggedin' in session and session['loggedin']:
-        account = session['username']
-    else:
-        account = ""
-        return render_template("login.html")
-
     if request.method == 'POST':
         # Delete booking from DB
         booking_id = request.form.get("booking_id")
@@ -316,7 +307,7 @@ def userBookings():
         mysql.connection.commit()
 
         cursor.execute("""
-            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate
+            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate, b.durationOfStay
             FROM hotelDatabase.hotels AS h
             INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
             WHERE b.customerID = %s
@@ -327,7 +318,7 @@ def userBookings():
     else:
         cursor = mysql.connection.cursor()
         cursor.execute("""
-            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate
+            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate, b.durationOfStay
             FROM hotelDatabase.hotels AS h
             INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
             WHERE b.customerID = %s
