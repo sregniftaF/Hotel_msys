@@ -248,13 +248,16 @@ def userpage():
         if isDelete == "delete":
             # Delete Account
             cursor = mysql.connection.cursor()
-            cursor.execute(
-                'DELETE FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
-            )
-            mysql.connection.commit()
-            flash('Delete Account!')
-            session.clear()
-            return redirect(url_for('index'))
+            try:
+                cursor.execute(
+                    'DELETE FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
+                )
+                mysql.connection.commit()
+                flash('Delete Account!')
+                session.clear()
+                return redirect(url_for('index'))
+            except:
+                flash('Booking(s) made. Cancellation required.')
         else:
             name = request.form.get('customerName')
             username = request.form.get('userName')
