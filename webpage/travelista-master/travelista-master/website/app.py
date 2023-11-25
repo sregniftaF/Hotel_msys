@@ -277,7 +277,7 @@ def userpage():
                     SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
                     WHERE customerID = %s
                     """,
-                    (name, username, contact, dob, nationality, email, passport, session['id'])
+                    (name, username, contact, dob, nationality, email, passport, session['id'],)
                 )
                 mysql.connection.commit()
                 flash('Account changed!')
@@ -304,7 +304,7 @@ def userBookings():
         account = session['username']
     else:
         account = ""
-        #return render_template("login.html")
+        return render_template("login.html")
 
     if request.method == 'POST':
         # Delete booking from DB
@@ -320,7 +320,7 @@ def userBookings():
             FROM hotelDatabase.hotels AS h
             INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
             WHERE b.customerID = %s
-        """, (session['id'])
+        """, (session['id'],)
         )
 
         bookings = cursor.fetchall()
