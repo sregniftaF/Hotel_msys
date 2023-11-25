@@ -21,7 +21,7 @@ app.config['MYSQL_USER'] = 'weekian'
 app.config['MYSQL_PASSWORD'] = '2201378@sit'
 app.config['MYSQL_DB'] = 'hotelDatabase'
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 app.jinja_env.filters['max_value'] = max_value
 
 sess.init_app(app)
@@ -232,20 +232,16 @@ def signup():
 
 @app.route('/userpage', methods=['GET', 'POST'])
 def userpage():
-    existing_account = {}
-    account = {}
     # Validate if user is login, if not, redirect to login page
     if 'loggedin' in session and session['loggedin']:
         account = session['username']
         # Retrieve user info from DB
         cursor = mysql.connection.cursor()
         cursor.execute(
-            'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'])
+            'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
         )
         existing_account = cursor.fetchone()
-    else:
-        account = ""
-        return render_template("login.html")
+        print(existing_account)
 
     if request.method == 'POST':
         isDelete = request.form.get("delete")
@@ -253,7 +249,7 @@ def userpage():
             # Delete Account
             cursor = mysql.connection.cursor()
             cursor.execute(
-                'DELETE FROM hotelDatabase.customer WHERE customerID = %s', (session['id'])
+                'DELETE FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
             )
             mysql.connection.commit()
             flash('Delete Account!')
@@ -315,7 +311,7 @@ def userBookings():
         booking_id = request.form.get("booking_id")
         cursor = mysql.connection.cursor()
         cursor.execute(
-            'DELETE FROM hotelDatabase.booking WHERE bookingId = %s', (booking_id)
+            'DELETE FROM hotelDatabase.booking WHERE bookingId = %s', (booking_id,)
         )
         mysql.connection.commit()
 
@@ -335,7 +331,7 @@ def userBookings():
             FROM hotelDatabase.hotels AS h
             INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
             WHERE b.customerID = %s
-        """, (session['id'])
+        """, (session['id'],)
                        )
         bookings = cursor.fetchall()
 
@@ -370,7 +366,7 @@ def userPagePassword():
         # Get user info and compare password
         cursor = mysql.connection.cursor()
         cursor.execute(
-            'SELECT * FROM hotelDatabase.customer WHERE email = %s AND userPassword = %s', (email, old_pwd)
+            'SELECT * FROM hotelDatabase.customer WHERE email = %s AND userPassword = %s', (email, old_pwd,)
         )
         account = cursor.fetchone()
 
@@ -383,7 +379,7 @@ def userPagePassword():
         cursor = mysql.connection.cursor()
         cursor.execute(
             'UPDATE hotelDatabase.customer SET userPassword = %s WHERE email = %s AND userPassword = %s',
-            (new_pwd, email, old_pwd)
+            (new_pwd, email, old_pwd,)
         )
         mysql.connection.commit()
 
