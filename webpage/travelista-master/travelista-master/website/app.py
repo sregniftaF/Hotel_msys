@@ -185,6 +185,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account[0]
             session['username'] = account[2]
+            session['email'] = account[8]
 
             flash('Logged in successfully!')
             return redirect(url_for('index'))
@@ -285,6 +286,7 @@ def userpage():
                 return redirect(url_for('index'))
             except:
                 flash('Booking(s) made. Cancellation required.')
+
         else:
             name = request.form.get('customerName')
             username = request.form.get('userName')
@@ -306,12 +308,12 @@ def userpage():
                     SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
                     WHERE customerID = %s
                     """,
-                    (name, username, contact, dob, nationality, email, passport, session['id'])
+                    (name, username, contact, dob, nationality, email, passport, session['id'],)
                 )
                 mysql.connection.commit()
                 flash('Account changed!')
                 cursor.execute(
-                    'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'])
+                    'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
                 )
                 existing_account = cursor.fetchone()
 
@@ -325,7 +327,7 @@ def about():
     return render_template('about.html')
 
 
-@app.route("/user/bookings", methods=['GET', 'POST'])
+@app.route("/userbookings", methods=['GET', 'POST'])
 def userBookings():
     if request.method == 'POST':
         # Delete booking from DB
@@ -359,7 +361,7 @@ def userBookings():
     return render_template("userBooking.html", account=session['username'], bookings=bookings)
 
 
-@app.route("/user/password", methods=['GET', 'POST'])
+@app.route("/userpassword", methods=['GET', 'POST'])
 def userPagePassword():
     # Validate if user is login, if not, redirect to login page
     if 'loggedin' in session and session['loggedin']:
@@ -374,20 +376,24 @@ def userPagePassword():
     }
 
     if request.method == 'POST':
-        email = session['email']
         old_pwd = request.form.get('old_pwd')
         new_pwd = request.form.get('new_pwd')
         confirm_pwd = request.form.get("confirm_pwd")
 
-        if new_pwd != confirm_pwd:
+        if len(new_pwd) < 7:
+            msg["is_error"] = True
+            msg["msg"] = "Password must be at least 7 characters."
+            return render_template("userPassword.html", account=session['username'], msg=msg)
+        elif new_pwd != confirm_pwd:
             msg["is_error"] = True
             msg["msg"] = "Please check your password, doesn't match"
             return render_template("userPassword.html", account=session['username'], msg=msg)
 
+
         # Get user info and compare password
         cursor = mysql.connection.cursor()
         cursor.execute(
-            'SELECT * FROM hotelDatabase.customer WHERE email = %s AND userPassword = %s', (email, old_pwd,)
+            'SELECT * FROM hotelDatabase.customer WHERE customerID = %s AND userPassword = %s', (session['id'], old_pwd,)
         )
         account = cursor.fetchone()
 
@@ -399,8 +405,8 @@ def userPagePassword():
         # Update user password
         cursor = mysql.connection.cursor()
         cursor.execute(
-            'UPDATE hotelDatabase.customer SET userPassword = %s WHERE email = %s AND userPassword = %s',
-            (new_pwd, email, old_pwd,)
+            'UPDATE hotelDatabase.customer SET userPassword = %s WHERE customerID = %s AND userPassword = %s',
+            (new_pwd, session['id'], old_pwd,)
         )
         mysql.connection.commit()
 

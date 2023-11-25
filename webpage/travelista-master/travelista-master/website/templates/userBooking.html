@@ -12,8 +12,8 @@ hello
             <div class="col-md-3 ">
                 <div class="list-group ">
                     <a href="/userpage" class="list-group-item list-group-item-action">Edit Profile</a>
-                    <a href="/user/bookings" class="list-group-item list-group-item-action active">Bookings</a>
-                    <a href="/user/password" class="list-group-item list-group-item-action">Change password</a>
+                    <a href="/userbookings" class="list-group-item list-group-item-action active">Bookings</a>
+                    <a href="/userpassword" class="list-group-item list-group-item-action">Change password</a>
 
                 </div>
             </div>
@@ -45,7 +45,7 @@ hello
                                                     <h4 class="card-title h6 h4-sm text-right">${{ b[6]}}</h4>
                                                 </div>
                                                 <div class="ml-3">
-                                                    <form method="POST" action="/user/bookings">
+                                                    <form method="POST" action="/userbookings">
                                                         <input type="hidden" name="booking_id" value="{{b[0]}}">
                                                         <button name="delete" type="submit" class="btn btn-danger">
                                                             Delete
