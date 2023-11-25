@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %}
+{% block content%}
+'''
+hello
+'''
+<section class="login-body">
+    <video autoplay muted loop id="myVideo">
+        <source src="{{url_for('static', filename='/img/login-bg.mp4') }}" type="video/mp4">
+    </video>
+    <div class="container emp-profile">
+        <div class="row">
+            <div class="col-md-3 ">
+                <div class="list-group ">
+                    <a href="/userpage" class="list-group-item list-group-item-action">Edit Profile</a>
+                    <a href="/userbookings" class="list-group-item list-group-item-action active">Bookings</a>
+                    <a href="/userpassword" class="list-group-item list-group-item-action">Change password</a>
+
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Your Bookings</h4>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for b in bookings %}
+                            <div class="col-md-12 mb-2">
+                                <div class="card flex-row">
+                                    <img class="card-img-left" width="120"
+                                         src="{{ b[3] }}"/>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 class="card-title h6 h6-sm text-left">{{ b[1] }}</h4>
+                                                <p class="card-text">{{ b[2] }}</p>
+                                                <p> Duration: {{ b[7] }} days</p>
+                                                <p class="card-text">{{ b[5]}} - {{ b[6]}}</p>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div>
+                                                    <h4 class="card-title h6 h4-sm text-right">${{ b[6]}}</h4>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <form method="POST" action="/userbookings">
+                                                        <input type="hidden" name="booking_id" value="{{b[0]}}">
+                                                        <button name="delete" type="submit" class="btn btn-danger">
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

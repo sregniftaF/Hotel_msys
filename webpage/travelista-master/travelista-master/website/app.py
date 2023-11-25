@@ -6,6 +6,7 @@ from datetime import timedelta
 import MySQLdb.cursors
 import re
 
+
 def max_value(a, b):
     return max(a, b)
 
@@ -20,12 +21,13 @@ app.config['MYSQL_USER'] = 'weekian'
 app.config['MYSQL_PASSWORD'] = '2201378@sit'
 app.config['MYSQL_DB'] = 'hotelDatabase'
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 app.jinja_env.filters['max_value'] = max_value
 
 sess.init_app(app)
 
 mysql = MySQL(app)
+
 
 @app.route('/')
 @app.route('/index', methods=('GET', 'POST'))
@@ -35,25 +37,65 @@ def index():
         account = session['username']
     else:
         account = ""
-    
-    childage = []  # Initialize an empty list to store child ages
+
+    # Initialize dictionaries to store data for each room
+    room_data = {}
+    r_adult = []
+    r_child = []
+    r_childage = []
 
     if request.method == 'POST':
         country = request.form.get('country')
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
-        adults = request.form.get('adults')
-        child = request.form.get('child')
-        if child and int(child) > 0:
-            for i in range(1, int(child) + 1):
-                age = request.form.get('child' + str(i))
-                if age is not None:  # Check if 'age' is not None before conversion
-                    childage.append(int(age))
-        print(country, checkin, checkout, adults, child)
-    
+        rooms = request.form.get('rooms')
+
+        # Loop through each room to collect data
+        for room_num in range(1, int(rooms) + 1):
+            room_key = f'room_{room_num}'
+            room_data[room_key] = {
+                'adults': request.form.get(f'adults{room_num}'),
+                'child': request.form.get(f'child{room_num}'),
+                'childage': []  # Initialize an empty list for child ages in each room
+            }
+
+            child_count = int(room_data[room_key]['child']) if room_data[room_key]['child'] else 0
+            if child_count > 0:
+                for i in range(1, child_count + 1):
+                    age = request.form.get(f'childage{room_num}_{i}')
+                    if age is not None:
+                        room_data[room_key]['childage'].append(int(age))
+                        
+        print(country, checkin, checkout, rooms, room_data)  # Print collected data for demonstration
+
+        if checkin and checkout is not None:
+            # pass checkin, checkout, room_data and rooms via session
+            checkinyear = int(checkin[6:10])
+            checkinmonth = int(checkin[0:2])
+            checkinday = int(checkin[3:5])
+            new_checkin = str(checkinyear) + '-' + str(checkinmonth) + '-' + str(checkinday)
+            checkoutyear = int(checkout[6:10])
+            checkoutmonth = int(checkout[0:2])
+            checkoutday = int(checkout[3:5])
+            new_checkout = str(checkoutyear) + '-' + str(checkoutmonth) + '-' + str(checkoutday)
+            session['checkin'] = new_checkin
+            session['checkout'] = new_checkout
+            session['rooms'] = rooms
+            session['room_data'] = room_data
+
+            # get duration of stay and pass to other pages via session
+            if checkinmonth == checkoutmonth:
+                duration = checkoutday - checkinday
+            else:
+                duration1 = 31 - checkinday
+                duration2 = checkoutday - 0
+                duration = duration1 + duration2
+            session['duration'] = str(duration)
+
     return render_template("index.html", account=account)
 
-@app.route('/hotels', methods=["GET","POST"])
+
+@app.route('/hotels', methods=["GET", "POST"])
 def hotels():
     # Check if the user is logged in
     if 'loggedin' in session and session['loggedin']:
@@ -71,17 +113,19 @@ def hotels():
         session['selectedValue'] = selected_value
     # Check if hotel_list is already stored in the session
     hotel_list = session.get('hotel_list')
-    
+
     if selected_value is None:
         session['selectedValue'] = 'all'
-        
+
     if hotel_list is None or selected_value != session.get('last_selected_value') or region != session.get('region'):
         # If hotel_list is not stored or the selectedValue has changed, run the SQL query
         cursor = mysql.connection.cursor()
         if selected_value == 'all' or region is None:
             cursor.execute('SELECT * FROM hotelDatabase.hotels ORDER BY hotelReviews Desc;')
         else:
-            cursor.execute('SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s', ("%" + region + "%",))
+            cursor.execute(
+                'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s',
+                ("%" + region + "%",))
             print(region)
         hotel_list = cursor.fetchall()
         session['hotel_list'] = hotel_list
@@ -108,13 +152,14 @@ def hotels():
     )
     return render_template('hotels.html', account=account, hotels=hotels_on_page, pagination=pagination)
 
-@app.route('/hotelinfo', methods=['POST','GET'])
+
+@app.route('/hotelinfo', methods=['POST', 'GET'])
 def hotelinfo():
     if 'loggedin' in session and session['loggedin']:
         account = session['username']
     else:
         account = ""
-        
+
     if request.method == 'POST':
         id = request.form.get('hotelid')
         cursor = mysql.connection.cursor()
@@ -122,8 +167,9 @@ def hotelinfo():
             'SELECT * FROM hotelDatabase.hotels WHERE propertyId = %s', (id,)
         )
         hotel_info = cursor.fetchone()
-        
+        session['p_id'] = id
     return render_template('hotelinfo.html', account=account, hotel=hotel_info)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -139,6 +185,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account[0]
             session['username'] = account[2]
+            session['email'] = account[8]
 
             flash('Logged in successfully!')
             return redirect(url_for('index'))
@@ -147,12 +194,14 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     # Clear session data
     session.clear()
     flash("Successfully signed out")
     return redirect(url_for('index'))
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -209,14 +258,208 @@ def signup():
     return render_template("signup.html")
 
 
-@app.route('/userpage')
+@app.route('/userpage', methods=['GET', 'POST'])
 def userpage():
-    # Clear session data
-    return render_template('userpage.html')
+    # Validate if user is login, if not, redirect to login page
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+        # Retrieve user info from DB
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
+        )
+        existing_account = cursor.fetchone()
+        print(existing_account)
+
+    if request.method == 'POST':
+        isDelete = request.form.get("delete")
+        if isDelete == "delete":
+            # Delete Account
+            cursor = mysql.connection.cursor()
+            try:
+                cursor.execute(
+                    'DELETE FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
+                )
+                mysql.connection.commit()
+                flash('Delete Account!')
+                session.clear()
+                return redirect(url_for('index'))
+            except:
+                flash('Booking(s) made. Cancellation required.')
+
+        else:
+            name = request.form.get('customerName')
+            username = request.form.get('userName')
+            contact = request.form.get('contactNum')
+            dob = request.form.get('dob')
+            nationality = request.form.get('nation')
+            email = request.form.get('email')
+            passport = request.form.get('passport')
+            cursor.execute(
+                'SELECT * FROM hotelDatabase.customer WHERE email = %s', (email,)
+            )
+            existing_account = cursor.fetchone()
+            if existing_account is not None:
+                flash('Email already exists.')
+            else:
+                if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                    flash('Invalid email address !')
+                elif not re.match(r'[A-Za-z0-9]+', username) or len(username) < 1:
+                    flash('name must contain only characters and numbers !')
+                elif len(name) < 3:
+                    flash('Name must be greater than 3 character.')
+                else:
+                    cursor.execute(
+                        """
+                        UPDATE hotelDatabase.customer 
+                        SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
+                        WHERE customerID = %s
+                        """,
+                        (name, username, contact, dob, nationality, email, passport, session['id'],)
+                    )
+                    mysql.connection.commit()
+                    flash('Account changed!')
+                    cursor.execute(
+                        'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
+                    )
+                    existing_account = cursor.fetchone()
+
+    return render_template('userpage.html', account=account, user=existing_account)
+
+
+
 
 @app.route('/about')
 def about():
     return render_template('about.html')
-    
+
+
+@app.route("/userbookings", methods=['GET', 'POST'])
+def userBookings():
+    if request.method == 'POST':
+        # Delete booking from DB
+        booking_id = request.form.get("booking_id")
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'DELETE FROM hotelDatabase.booking WHERE bookingId = %s', (booking_id,)
+        )
+        mysql.connection.commit()
+
+        cursor.execute("""
+            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate, b.durationOfStay
+            FROM hotelDatabase.hotels AS h
+            INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
+            WHERE b.customerID = %s
+        """, (session['id'],)
+        )
+
+        bookings = cursor.fetchall()
+    else:
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+            SELECT b.bookingId, h.hotelName, h.hotelAddress, h.imageURL, b.totalPrice, b.checkInDate, b.checkOutDate, b.durationOfStay
+            FROM hotelDatabase.hotels AS h
+            INNER JOIN hotelDatabase.booking AS b ON h.propertyId = b.propertyId
+            WHERE b.customerID = %s
+        """, (session['id'],)
+                       )
+        bookings = cursor.fetchall()
+
+    return render_template("userBooking.html", account=session['username'], bookings=bookings)
+
+
+@app.route("/userpassword", methods=['GET', 'POST'])
+def userPagePassword():
+    # Validate if user is login, if not, redirect to login page
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+    else:
+        account = ""
+        return render_template("login.html")
+
+    msg = {
+        "is_error": False,
+        "msg": ""
+    }
+
+    if request.method == 'POST':
+        old_pwd = request.form.get('old_pwd')
+        new_pwd = request.form.get('new_pwd')
+        confirm_pwd = request.form.get("confirm_pwd")
+
+        if len(new_pwd) < 7:
+            msg["is_error"] = True
+            msg["msg"] = "Password must be at least 7 characters."
+            return render_template("userPassword.html", account=session['username'], msg=msg)
+        elif new_pwd != confirm_pwd:
+            msg["is_error"] = True
+            msg["msg"] = "Please check your password, doesn't match"
+            return render_template("userPassword.html", account=session['username'], msg=msg)
+
+
+        # Get user info and compare password
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'SELECT * FROM hotelDatabase.customer WHERE customerID = %s AND userPassword = %s', (session['id'], old_pwd,)
+        )
+        account = cursor.fetchone()
+
+        if account is None:
+            msg["is_error"] = True
+            msg["msg"] = "Please check your passwords, invalid password"
+            return render_template("userPassword.html", account=session['username'], msg=msg)
+
+        # Update user password
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            'UPDATE hotelDatabase.customer SET userPassword = %s WHERE customerID = %s AND userPassword = %s',
+            (new_pwd, session['id'], old_pwd,)
+        )
+        mysql.connection.commit()
+
+        msg["is_error"] = False
+        msg["msg"] = "Successfully updated password"
+
+    return render_template("userPassword.html", account=session['username'], msg=msg)
+
+@app.route('/hotelBooking', methods=['POST', 'GET'])
+def hotelbooking():
+    check_in = session.get('checkin')
+    check_out = session.get('checkout')
+    date_duration = session.get('duration')
+    if 'loggedin' in session and session['loggedin']:
+        account = session['username']
+    else:
+        account = ""
+
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+
+        rtype = 'single'
+        t_price = '10'
+        n_pax = '1'
+        r_d = session.get('room_data')
+        t_room = session.get('rooms')
+
+        # for room_num in range(1, int(session['rooms']) + 1):
+        #     x = r_d.get(f'room_{room_num}')
+        #     print(x.get('adults'), x.get('child'), x.get('childage'))
+
+        if check_in is None:
+            flash('Please enter Detail in the Homepage!')
+        elif check_out is None:
+            flash('Please enter Detail in the Homepage!')
+        elif date_duration is None:
+            flash('Please enter Detail in the Homepage!')
+        else:
+            print(rtype, t_price, n_pax, check_in, check_out, date_duration, r_d)
+            cursor.execute(
+                'INSERT into hotelDatabase.booking VALUES( NULL, %s, %s, %s, %s, %s, %s, %s, %s)',
+                (session['id'], session['p_id'], rtype, n_pax, t_price, check_in, check_out, date_duration)
+            )
+            mysql.connection.commit()
+
+    return render_template('hotelBooking.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

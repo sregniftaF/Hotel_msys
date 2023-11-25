@@ -49,7 +49,7 @@
         <div class="container main-menu">
             <div class="row align-items-center justify-content-between d-flex">
               <div id="logo">
-                <a href="index.html"><img src="{{ url_for('static', filename='img/logo.png') }}" title="" /></a>
+                <a href="/index"><img src="{{ url_for('static', filename='img/logo.png') }}" title="" /></a>
               </div>
               <nav id="nav-menu-container">
                 <ul class="nav-menu">
@@ -71,7 +71,7 @@
     {% block content %} {% endblock %}
 
     <!-- start footer Area -->		
-    {% if (request.path != "/login" and request.path != "/signup")%}
+    {% if (request.path != "/login" and request.path != "/signup" and request.path !="/userpage")%}
     <footer class="footer-area section-gap">
         <div class="container">
 
@@ -142,75 +142,79 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="{{ url_for('static', filename='js/mail-script.js') }}"></script>	
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
-        $(document).ready(function () {
-          const childInput = $('input[name="child"]');
-          const container = $('#container');
-        
-          childInput.on('input', function () {
-            const inputValue = parseInt(childInput.val());
-        
-            // Clear the container
-            container.empty();
-        
-            if (inputValue >= 1) {
-              for (let i = 1; i <= inputValue; i++) {
-                const hidden = $('<input>').addClass('form-control')
-                  .attr('type', 'number')
-                  .attr('min', '1')
-                  .attr('max', '17')
-                  .attr('name', 'child' + i)
-                  .attr('placeholder', 'Child age')
-                  .attr('tabindex', '1');
-                container.append(hidden);
+      $(document).ready(function () {
+          $('#roomInput').on('input', function () {
+              var rooms = $(this).val();
+              if (rooms >= 1) {
+                  $('#adultChildContainer').empty();
+                  for (var i = 1; i <= rooms; i++) {
+                      var isEven = i % 2 === 0;
+                      var positionClass = isEven ? 'banner-right' : 'banner-left';
+                      $('#adultChildContainer').append(
+                          '<div class="col-lg-6 ' + positionClass + '">' +
+                          '<p>Room ' + i + '</p>' +
+                          '<input type="number" min="1" max="20" class="form-control adults" name="adults' + i + '" placeholder="Adults" onfocus="this.placeholder = \'\'" onblur="this.placeholder = \'Adults\'">' +
+                          '<input type="number" min="0" max="20" class="form-control child" name="child' + i + '" placeholder="Child" tabindex="1">' +
+                          '<div class="child-age-container" id="childAgeContainer' + i + '"></div>' +
+                          '</div>'
+                      );
+                  }
+                  $('#adultChildContainer').show();
+              } else {
+                  $('#adultChildContainer').empty();
+                  $('#adultChildContainer').hide();
               }
-            }
           });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-          $('#roomInput').on('input', function() {
-            var rooms = $(this).val();
-            if (rooms >= 1) {
-              $('#adultChildContainer').empty();
-              for (var i = 1; i <= rooms; i++) {
-                var isEven = i % 2 === 0;
-                var positionClass = isEven ? 'banner-right' : 'banner-right';
-                $('#adultChildContainer').append(
-                  '<div class="col-lg-6 ' + positionClass + '">' +
-                  '<p>Room ' + i + '</p>' +
-                  '<input type="number" min="1" max="20" class="form-control" name="adults' + i + '" placeholder="Adults" onfocus="this.placeholder = \'\'" onblur="this.placeholder = \'Adults\'">' +
-                  '<input type="number" min="0" max="20" class="form-control" name="child' + i + '" placeholder="Child" tabindex="1">' +
-                  '<div id="childAgeContainer' + i + '"></div>' +
-                  '</div>'
-                );
-              }
-              $('#adultChildContainer').show();
-            } else {
-              $('#adultChildContainer').empty();
-              $('#adultChildContainer').hide();
-            }
-          });
-      
+  
           // Listen for changes in the child input fields
-          $('#adultChildContainer').on('input', 'input[name^="child"]', function() {
-            var roomNumber = $(this).attr('name').match(/\d+/); // Extract the room number from the input name
-            var childCount = parseInt($(this).val());
-      
-            var childAgeContainer = $('#childAgeContainer' + roomNumber);
-      
-            // Clear any previous child age inputs
-            childAgeContainer.empty();
-      
-            if (childCount > 0) {
-              for (var j = 1; j <= childCount; j++) {
-                childAgeContainer.append(
-                  '<input type="number" min="0" max="20" class="form-control" name="childAge' + roomNumber + '_' + j + '" placeholder="Child Age" tabindex="1">'
-                );
+          $('#adultChildContainer').on('input', '.child', function () {
+              var roomNumber = $(this).attr('name').match(/\d+/); // Extract the room number from the input name
+              var childCount = parseInt($(this).val());
+  
+              var childAgeContainer = $('#childAgeContainer' + roomNumber);
+  
+              // Clear any previous child age inputs
+              childAgeContainer.empty();
+  
+              if (childCount > 0) {
+                  for (var j = 1; j <= childCount; j++) {
+                      childAgeContainer.append(
+                          '<input type="number" min="1" max="17" class="form-control childage" name="childage' + roomNumber + '_' + j + '" placeholder="Child Age" tabindex="1">'
+                      );
+                  }
               }
-            }
           });
+  
+          // Listen for changes in the childage input fields
+          $('#adultChildContainer').on('input', '.childage', function () {
+              // Handle changes in childage inputs here
+          });
+
+          $('#myForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            
+            // Gather data from inputs
+            var formData = {};
+            var rooms = $('#roomInput').val();
+    
+            for (var i = 1; i <= rooms; i++) {
+                formData['adults' + i] = $('input[name="adults' + i + '"]').val();
+                formData['child' + i] = $('input[name="child' + i + '"]').val();
+    
+                var childCount = parseInt($('input[name="child' + i + '"]').val());
+                if (childCount > 0) {
+                    for (var j = 1; j <= childCount; j++) {
+                        formData['childage' + i + '_' + j] = $('input[name="childage' + i + '_' + j + '"]').val();
+                    }
+                }
+            }
+    
+            // Process the form data (e.g., send it to a server or perform some action)
+            console.log(formData); // Log the captured data for demonstration
+    
+            // Here, you can perform further actions with the form data (e.g., AJAX request or other processing)
         });
+      });
     </script>
     <script>
         function updateSecondSelect(selectedValue) {
