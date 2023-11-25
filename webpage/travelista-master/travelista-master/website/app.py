@@ -295,27 +295,34 @@ def userpage():
             nationality = request.form.get('nation')
             email = request.form.get('email')
             passport = request.form.get('passport')
-            if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-                flash('Invalid email address !')
-            elif not re.match(r'[A-Za-z0-9]+', username) or len(username) < 1:
-                flash('name must contain only characters and numbers !')
-            elif len(name) < 3:
-                flash('Name must be greater than 3 character.')
+            cursor.execute(
+                'SELECT * FROM hotelDatabase.customer WHERE email = %s', (email,)
+            )
+            existing_account = cursor.fetchone()
+            if existing_account is not None:
+                flash('Email already exists.')
             else:
-                cursor.execute(
-                    """
-                    UPDATE hotelDatabase.customer 
-                    SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
-                    WHERE customerID = %s
-                    """,
-                    (name, username, contact, dob, nationality, email, passport, session['id'],)
-                )
-                mysql.connection.commit()
-                flash('Account changed!')
-                cursor.execute(
-                    'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
-                )
-                existing_account = cursor.fetchone()
+                if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                    flash('Invalid email address !')
+                elif not re.match(r'[A-Za-z0-9]+', username) or len(username) < 1:
+                    flash('name must contain only characters and numbers !')
+                elif len(name) < 3:
+                    flash('Name must be greater than 3 character.')
+                else:
+                    cursor.execute(
+                        """
+                        UPDATE hotelDatabase.customer 
+                        SET customerName = %s, username = %s, contactNum = %s, dateOfBirth = %s, nationality = %s, email = %s, passport = %s
+                        WHERE customerID = %s
+                        """,
+                        (name, username, contact, dob, nationality, email, passport, session['id'],)
+                    )
+                    mysql.connection.commit()
+                    flash('Account changed!')
+                    cursor.execute(
+                        'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
+                    )
+                    existing_account = cursor.fetchone()
 
     return render_template('userpage.html', account=account, user=existing_account)
 
