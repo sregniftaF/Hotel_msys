@@ -54,7 +54,6 @@
               <nav id="nav-menu-container">
                 <ul class="nav-menu">
                   <li><a href="index">Home</a></li>
-                  <li><a href="hotels">Hotels</a></li>
                   {% if session['loggedin'] %}
                   <li><a href="userpage">{{account}}</a></li>
                   <li><a href="logout">Logout</a></li>
@@ -217,69 +216,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
       });
     </script>
     <script>
-        function updateSecondSelect(selectedValue) {
-            var secondSelect = document.getElementById('second-select');
-
-            if (selectedValue == 'all') {
-                secondSelect.innerHTML = ''
-            }
-            else if (selectedValue == 'singapore') {
-                secondSelect.innerHTML = '<option value="singapore" selected>Singapore</option>\
-                <option value="jurong" >Jurong</option>\
-                <option value="changi" >Changi</option>\
-                <option value="chinatown" >Chinatown</option>\
-                <option value="marina" >Marina</option>\
-                <option value="sentosa" >Sentosa</option>\
-                <option value="novena" >Novena</option>\
-                <option value="seletar" >Seletar</option>\
-                <option value="kranji" >Kranji</option>'
-            }
-            else {
-                secondSelect.innerHTML = '<option value="japan" >Japan</option>\
-                <option value="hiroshima" >Hiroshima</option>\
-                <option value="ishigaki" >Ishigaki</option>\
-                <option value="kochi" >Kochi</option>\
-                <option value="niigata" >Niigata</option>\
-                <option value="kitakyushu" >Kitakyushu</option>\
-                <option value="kumamoto" >Kumamoto</option>\
-                <option value="kagoshima" >Kagoshima</option>\
-                <option value="miyakojima" >Miyakojima</option>\
-                <option value="matsuyama" >Matsuyama</option>\
-                <option value="nagoya" >Nagoya</option>\
-                <option value="nagasaki" >Nagasaki</option>\
-                <option value="naha" >Naha</option>\
-                <option value="osaka" >Osaka</option>\
-                <option value="sendai" >Sendai</option>'
-            }
-        }
-        
-        // Retrieve the selected value from localStorage on page load
-        var storedValue = localStorage.getItem('selectedValue');
-        if (storedValue) {
-            // Set the first select's value to the stored value
-            document.getElementById('country-select').value = storedValue;
-            // Update the second select based on the stored value
-            updateSecondSelect(storedValue);
-        }
-    </script>
-    <script>
-        function updateSelectedOption(selectedValue) {
-            var secondSelect = document.getElementById('second-select');
-            
-            // Remove the selected attribute from all options
-            var options = secondSelect.options;
-            for (var i = 0; i < options.length; i++) {
-                options[i].removeAttribute('selected');
-            }
-    
-            // Add the selected attribute to the chosen option
-            var selectedOption = secondSelect.querySelector("option[value='" + selectedValue + "']");
-            if (selectedOption) {
-                selectedOption.setAttribute('selected', 'selected');
-            }
-        }
-    </script>
-    <script>
         // Get a reference to the flash message element
         const flashMessage = document.getElementById('flashMessage');
 
@@ -296,7 +232,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         // Call the function to display the flash message
         showFlashMessage(flashMessage.textContent);
     </script>
-
     
 </body>
 </html>
