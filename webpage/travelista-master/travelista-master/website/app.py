@@ -123,7 +123,7 @@ def hotels():
         json_temp = json.loads(reservation_data)
         cursor = mysql.connection.cursor()
         cursor.execute(
-                '       ',
+                'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s;',
                 ("%" + session['country'] + "%",))
         hotel_list = cursor.fetchall()
         i = 0
@@ -131,7 +131,7 @@ def hotels():
             json_temp['propertyId'] = str(hotel[1]) #change the name in the jsontemp 
             json_temp['destination']['regionId'] = str(hotel[0]) # change the region if for each temp
             cursor.execute(
-                'SELECT * FROM hotelDatabase.cache_collection WHERE propertyId = %s AND checkIn = %s AND checkOut = %s AND adult = %s AND child = %s;',
+                'SELECT propertyId FROM hotelDatabase.cache_collection WHERE propertyId = %s AND checkIn = %s AND checkOut = %s AND adult = %s AND child = %s;',
                 (hotel[1], session['checkin'], session['checkout'], session['adults'], session['child'],)
             )
             check_exist_request = cursor.fetchone()
