@@ -37,7 +37,6 @@ sess.init_app(app)
 
 mysql = MySQL(app)
 
-
 @app.route('/')
 @app.route('/index', methods=('GET', 'POST'))
 def index():
@@ -102,6 +101,7 @@ def index():
                 },
                 "rooms": rooms_data
             }
+            session['flag'] = 1
         return redirect(url_for('hotels', reservation_data=json.dumps(reservation_data)))
     return render_template("index.html", account=account)
 
@@ -113,73 +113,84 @@ def hotels():
         account = session['username']
     else:
         account = ""
-
-    # # Check if the selectedValue is already stored in the session
-    # selected_value = session.get('selectedValue')
-    # region = session.get('region')
     
-    if request.method == 'GET':
+    if request.method == 'GET' and session['flag'] == 1:
+        session['flag'] = 0
         reservation_data = request.args.get('reservation_data')
         json_temp = json.loads(reservation_data)
         cursor = mysql.connection.cursor()
         cursor.execute(
-                '       ',
+                'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s;',
                 ("%" + session['country'] + "%",))
-        hotel_list = cursor.fetchall()
+        session['hotel_list'] = cursor.fetchall()
         i = 0
-        for hotel in hotel_list:
+        for hotel in session['hotel_list']:
             json_temp['propertyId'] = str(hotel[1]) #change the name in the jsontemp 
             json_temp['destination']['regionId'] = str(hotel[0]) # change the region if for each temp
             cursor.execute(
-                'SELECT * FROM hotelDatabase.cache_collection WHERE propertyId = %s AND checkIn = %s AND checkOut = %s AND adult = %s AND child = %s;',
+                'SELECT propertyId FROM hotelDatabase.cache_collection WHERE propertyId = %s AND checkIn = %s AND checkOut = %s AND adult = %s AND child = %s;',
                 (hotel[1], session['checkin'], session['checkout'], session['adults'], session['child'],)
             )
             check_exist_request = cursor.fetchone()
             if check_exist_request is None:
                 response = requests.post(url, json=json_temp, headers=headers)
                 res = response.json()
-                dump_res = json.dumps(res)
-                cursor.execute(
-                    'INSERT INTO hotelDatabase.cache_collection VALUES (%s, %s, %s, %s, %s, %s)', (hotel[1],session['checkin'], session['checkout'], session['adults'], session['child'], dump_res,)
-                )
-                mysql.connection.commit()
+                units_data = {}
+                data = res['data'].get('propertyOffers').get('units')
+                if data is not None:
+                    room_counter = 1
+                    for _ in range(9):
+                        room_key = f'room{room_counter}'
+                        units_data[room_key] = []
+                        for unit in data:
+                            if unit is None:
+                                break
+                            try:
+                                header = unit['header'].get('text')
+                                price = unit['ratePlans']
+                                price1 = price[0].get('priceDetails')
+                                price2 = price1[0].get('totalPriceMessage')
+                                image = unit['unitGallery'].get('gallery')
+                                image1 = image[0].get('image').get('url')
+                                units_data[room_key].append(header)
+                                units_data[room_key].append(price2)
+                                units_data[room_key].append(image1)
+                            except IndexError:
+                                print("Unit sold out")
+                        room_counter += 1
+                    if len(units_data['room1']) != 0:
+                        json_units_data = json.dumps(units_data)
+                        print("start")
+                        cursor.execute(
+                            'INSERT INTO hotelDatabase.cache_collection VALUES (%s, %s, %s, %s, %s, %s)',
+                            (hotel[1],session['checkin'], session['checkout'], session['adults'], session['child'], json_units_data,)
+                        )
+                        print("stop")
+                        mysql.connection.commit()
+                    else:
+                        try:
+                            session['hotel_list'].remove(hotel)
+                        except AttributeError:
+                            print('session is not initialised')
+                else:
+                    try:
+                        session['hotel_list'].remove(hotel)
+                    except AttributeError:
+                        print('session is not initialised')
 
     # if request.method == 'POST':
-    #     selected_value = request.form.get('country')  # Retrieve the selected value from the form
-    #     region = request.form.get('region')
-    #     session['selectedValue'] = selected_value
-    # # Check if hotel_list is already stored in the session
-    # hotel_list = session.get('hotel_list')
-
-    # if selected_value is None:
-    #     session['selectedValue'] = 'all'
-
-    # if hotel_list is None or selected_value != session.get('last_selected_value') or region != session.get('region'):
-    #     # If hotel_list is not stored or the selectedValue has changed, run the SQL query
-    #     cursor = mysql.connection.cursor()
-    #     if selected_value == 'all' or region is None:
-    #         cursor.execute('SELECT * FROM hotelDatabase.hotels ORDER BY hotelReviews Desc;')
-    #     else:
-    #         cursor.execute(
-    #             'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s',
-    #             ("%" + region + "%",))
-    #         print(region)
-    #     hotel_list = cursor.fetchall()
-    #     session['hotel_list'] = hotel_list
-    #     session['last_selected_value'] = selected_value
-    #     session['region'] = region
     
     # Pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page = 12  # Number of hotels to display per page
-    total = len(hotel_list)
+    total = len(session['hotel_list'])
     total_pages = total // per_page + (1 if total % per_page > 0 else 0)
 
     if page > total_pages:
         page = total_pages
     offset = (page - 1) * per_page
 
-    hotels_on_page = hotel_list[offset: offset + per_page]
+    hotels_on_page = session['hotel_list'][offset: offset + per_page]
 
     pagination = Pagination(
         page=page,
