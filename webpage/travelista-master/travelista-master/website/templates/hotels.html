@@ -3,60 +3,7 @@
 
     <!-- Start destinations Area -->
     <section class="destinations-area section-gap">
-        <div class="row px-xl-5">
-            <!-- Shop Sidebar Start -->
-            <div class="col-lg-2 col-md-11">
-                <!-- Country Start -->
-                <form method="POST">
-                    <div class="border-bottom mb-4 pb-4">
-                        <h5 class="font-weight-semi-bold mb-4">Country</h5>
-                            <select class="custom-select" id="country-select" name="country" onchange="updateSecondSelect(this.value)">
-                                {% set selectedValue = session['selectedValue'] %}
-                                <option value="all" {% if selectedValue == 'all' or selectedValue is not defined %} selected {% endif %}>All country</option>
-                                <option value="singapore" {% if selectedValue == 'singapore' %} selected {% endif %}>Singapore</option>
-                                <option value="japan" {% if selectedValue == 'japan' %} selected {% endif %}>Japan</option>
-                            </select>
-                            <!-- Hidden refresh button -->
-                    </div>                
-                    <!-- Country End -->
-
-                    <div class="border-bottom mb-4 pb-4">
-                        <h5 class="font-weight-semi-bold mb-4">Region</h5>
-                            <select class="custom-select" id="second-select" name="region">
-                                {% if session['selectedValue'] == 'singapore'%}
-                                <option value="singapore" {% if session['region'] == 'singapore' %}selected {% endif %}>Singapore</option>
-                                <option value="jurong" {% if session['region'] == 'jurong' %}selected {% endif %}>Jurong</option>
-                                <option value="changi" {% if session['region'] == 'changi' %}selected {% endif %}>Changi</option>
-                                <option value="chinatown" {% if session['region'] == 'chinatown' %}selected {% endif %}>Chinatown</option>
-                                <option value="marina" {% if session['region'] == 'marina' %}selected {% endif %}>Marina</option>
-                                <option value="sentosa" {% if session['region'] == 'sentosa' %}selected {% endif %}>Sentosa</option>
-                                <option value="novena" {% if session['region'] == 'novena' %}selected {% endif %}>Novena</option>
-                                <option value="seletar" {% if session['region'] == 'seletar' %}selected {% endif %}>Seletar</option>
-                                <option value="kranji" {% if session['region'] == 'kranji' %}selected {% endif %}>Kranji</option>
-                                {% elif session['selectedValue'] == 'japan'%}
-                                <option value="japan" {% if session['region'] == 'japan' %}selected {% endif %}>Japan</option>
-                                <option value="hiroshima" {% if session['region'] == 'hiroshima' %}selected {% endif %}>Hiroshima</option>
-                                <option value="ishigaki" {% if session['region'] == 'ishigaki' %}selected {% endif %}>Ishigaki</option>
-                                <option value="kochi" {% if session['region'] == 'kochi' %}selected {% endif %}>Kochi</option>
-                                <option value="niigata" {% if session['region'] == 'niigata' %}selected {% endif %}>Niigata</option>
-                                <option value="kitakyushu" {% if session['region'] == 'kitakyushu' %}selected {% endif %}>Kitakyushu</option>
-                                <option value="kumamoto" {% if session['region'] == 'kumamoto' %}selected {% endif %}>Kumamoto</option>
-                                <option value="kagoshima" {% if session['region'] == 'kagoshima' %}selected {% endif %}>Kagoshima</option>
-                                <option value="miyakojima" {% if session['region'] == 'miyakojima' %}selected {% endif %}>Miyakojima</option>
-                                <option value="matsuyama" {% if session['region'] == 'matsuyama' %}selected {% endif %}>Matsuyama</option>
-                                <option value="nagoya" {% if session['region'] == 'nagoya' %}selected {% endif %}>Nagoya</option>
-                                <option value="nagasaki" {% if session['region'] == 'nagasaki' %}selected {% endif %}>Nagasaki</option>
-                                <option value="naha" {% if session['region'] == 'naha' %}selected {% endif %}>Naha</option>
-                                <option value="osaka" {% if session['region'] == 'osaka' %}selected {% endif %}>Osaka</option>
-                                <option value="sendai" {% if session['region'] == 'sendai' %}selected {% endif %}>Sendai</option>
-                                {% endif %}
-                            </select>
-                    </div>
-                    <input type="submit" class="primary-btn text-uppercase" name="submit" value="Apply filter">
-                </form>
-            </div>
-            <!-- Shop Sidebar End -->
-
+        <div class="row px-xl-5 justify-content-center">
             <div class="col-lg-9 col-md-12">
                 <div class="row" id="hotel-list-container">
                     {% for hotel in hotels %}
@@ -100,7 +47,7 @@
                                 </div>
                                 <ul class="package-list">
                                     <li class="d-flex justify-content-between align-items-center">
-                                        <span>{{ hotel[10] }}</span>
+                                        <span id="price">{{ hotel[10]|replace('"', '') }}</span>
                                         <form method="POST" action="hotelinfo">
                                             <input type="text" name="hotelid" value={{hotel[1]}} style="display: none"></input>
                                             <input type="submit" name="submit" value="View hotel" class="price-btn"></input>

@@ -16,7 +16,7 @@ def max_value(a, b):
 url = "https://hotels4.p.rapidapi.com/properties/v2/get-offers"
 headers = {
 	"content-type": "application/json",
-	"X-RapidAPI-Key": "d54251d0d0msh2c71c303b8b375ap16db3bjsn6835d5c34d91",
+	"X-RapidAPI-Key": "2ae3c4b946msh0ad4e05fa122dedp15c03fjsnb50c606376b0",
 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
 
@@ -123,6 +123,7 @@ def hotels():
                 ("%" + session['country'] + "%",))
         rows = cursor.fetchall()
         hotel_list = [list(row) for row in rows]
+        hotel_remove = []
         for hotel in hotel_list:
             json_temp['propertyId'] = str(hotel[1]) #change the name in the jsontemp 
             json_temp['destination']['regionId'] = str(hotel[0]) # change the region if for each temp
@@ -145,24 +146,23 @@ def hotels():
                 data = res['data'].get('propertyOffers').get('units')
                 if data is not None:
                     room_counter = 1
-                    for _ in range(9):
-                        room_key = f'room{room_counter}'
-                        units_data[room_key] = []
-                        for unit in data:
-                            if unit is None:
-                                break
-                            try:
-                                header = unit['header'].get('text')
-                                price = unit['ratePlans']
-                                price1 = price[0].get('priceDetails')
-                                price2 = price1[0].get('totalPriceMessage')
-                                image = unit['unitGallery'].get('gallery')
-                                image1 = image[0].get('image').get('url')
-                                units_data[room_key].append(header)
-                                units_data[room_key].append(price2)
-                                units_data[room_key].append(image1)
-                            except IndexError:
-                                print("Unit sold out")
+                    for room in range(9):
+                        try:
+                            room_key = f'room{room_counter}'
+                            units_data[room_key] = []
+                            header = data[room]['header'].get('text')
+                            price = data[room]['ratePlans']
+                            price1 = price[0].get('priceDetails')
+                            price2 = price1[0].get('totalPriceMessage')
+                            image = data[room]['unitGallery'].get('gallery')
+                            image1 = image[0].get('image').get('url')
+                            print(header, price2, image1)
+                            units_data[room_key].append(header)
+                            units_data[room_key].append(price2)
+                            units_data[room_key].append(image1)
+                        except IndexError:
+                            print("Unit sold out")
+                            break
                         room_counter += 1
                     if len(units_data['room1']) != 0:
                         json_units_data = json.dumps(units_data)
@@ -173,10 +173,9 @@ def hotels():
                         mysql.connection.commit()
                     else:
                         try:
-                            hotel_list.remove(hotel)
+                            hotel_remove.append(hotel)
                         except AttributeError:
                             print('session is not initialised')
-            
             cursor.execute('''SELECT
                            response -> "$.room1[1]" 
                            FROM hotelDatabase.cache_collection WHERE propertyId = %s and checkIn = %s and checkOut = %s and adult = %s and child = %s;''',
@@ -184,10 +183,12 @@ def hotels():
             hprice = cursor.fetchone()
             try:
                 hprice = hprice[0]
+                print(hprice, hotel[1])
                 hotel.append(hprice)
             except TypeError:
                 print(hotel[1])
-        
+        for item in hotel_remove:
+            hotel_list.remove(item)
         session['hotel_list'] = hotel_list
             
 
