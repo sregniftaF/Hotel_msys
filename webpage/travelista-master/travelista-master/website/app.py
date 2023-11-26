@@ -113,7 +113,6 @@ def hotels():
         account = session['username']
     else:
         account = ""
-    
     if request.method == 'GET' and session['flag'] == 1:
         session['flag'] = 0
         reservation_data = request.args.get('reservation_data')
@@ -122,13 +121,19 @@ def hotels():
         cursor.execute(
                 'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s;',
                 ("%" + session['country'] + "%",))
-        session['hotel_list'] = cursor.fetchall()
-        i = 0
-        for hotel in session['hotel_list']:
+        hotel_list = cursor.fetchall()
+        for hotel in hotel_list:
             json_temp['propertyId'] = str(hotel[1]) #change the name in the jsontemp 
             json_temp['destination']['regionId'] = str(hotel[0]) # change the region if for each temp
-            cursor.execute(
-                'SELECT propertyId FROM hotelDatabase.cache_collection WHERE propertyId = %s AND checkIn = %s AND checkOut = %s AND adult = %s AND child = %s;',
+            cursor.execute('''SELECT 
+                                propertyId 
+                            FROM 
+                                hotelDatabase.cache_collection 
+                            WHERE propertyId = %s 
+                            AND checkIn = %s 
+                            AND checkOut = %s 
+                            AND adult = %s 
+                            AND child = %s;''',
                 (hotel[1], session['checkin'], session['checkout'], session['adults'], session['child'],)
             )
             check_exist_request = cursor.fetchone()
@@ -169,14 +174,20 @@ def hotels():
                         mysql.connection.commit()
                     else:
                         try:
-                            session['hotel_list'].remove(hotel)
+                            hotel_list.remove(hotel)
                         except AttributeError:
                             print('session is not initialised')
-                else:
-                    try:
-                        session['hotel_list'].remove(hotel)
-                    except AttributeError:
-                        print('session is not initialised')
+            
+            cursor.execute('''SELECT
+                           response -> "$.room1[1]" 
+                           FROM hotelDatabase.cache_collection;''')
+            hprice = cursor.fetchone()
+            hprice = hprice[0]
+            hlist = list(hotel)
+            hlist.append(hprice)
+            hotel = tuple(hlist)
+        session['hotel_list'] = hotel_list
+            
 
     # if request.method == 'POST':
     
