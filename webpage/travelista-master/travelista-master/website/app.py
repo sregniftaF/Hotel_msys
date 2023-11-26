@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 import MySQLdb.cursors
 import requests
+import ast
 import re
 
 
@@ -14,10 +15,10 @@ def max_value(a, b):
     return max(a, b)
 
 url = "https://hotels4.p.rapidapi.com/properties/v2/get-offers"
-headers = {
-	"content-type": "application/json",
-	"X-RapidAPI-Key": "d54251d0d0msh2c71c303b8b375ap16db3bjsn6835d5c34d91",
-	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
+headers = { 
+ "content-type": "application/json", 
+ "X-RapidAPI-Key": "2ae3c4b946msh0ad4e05fa122dedp15c03fjsnb50c606376b0", 
+ "X-RapidAPI-Host": "hotels4.p.rapidapi.com" 
 }
 
 app = Flask(__name__)
@@ -75,8 +76,12 @@ def index():
             
             checkin_date = datetime.strptime(checkin, "%m/%d/%Y") 
             checkout_date = datetime.strptime(checkout, "%m/%d/%Y")
+            duration = checkout_date - checkin_date
+
             session['checkin'] = checkin_date.strftime('%Y-%m-%d')
             session['checkout'] = checkout_date.strftime('%Y-%m-%d')
+            session['duration'] = duration.days
+            
             
             cursor = mysql.connection.cursor()
             cursor.execute(
@@ -230,7 +235,24 @@ def hotelinfo():
         )
         hotel_info = cursor.fetchone()
         session['p_id'] = id
-    return render_template('hotelinfo.html', account=account, hotel=hotel_info)
+        cursor.execute('''SELECT 
+                            response ->>"$.room1[0 to 2]",
+                            response ->>"$.room2[0 to 2]",
+                            response ->>"$.room3[0 to 2]"
+                        FROM 
+                            hotelDatabase.cache_collection
+                        WHERE propertyId = %s
+                        AND checkin = %s
+                        AND checkout = %s
+                        AND adult = %s
+                        AND child = %s''', (session['p_id'], session['checkin'], session['checkout'], session['adults'], session['child']))
+        roomdetails = cursor.fetchone()
+        roomList= []
+        for room in roomdetails:
+            roomList.append(ast.literal_eval(room))
+        session['roomList'] = roomList
+        print(roomList)
+    return render_template('hotelinfo.html', account=account, hotel=hotel_info, roomdetails = roomList)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -250,7 +272,11 @@ def login():
             session['email'] = account[8]
 
             flash('Logged in successfully!')
-            return redirect(url_for('index'))
+            roomlist = session.get('roomlist')
+            if roomlist is not None:
+                return redirect(url_for('hotelbooking'))
+            else:
+                return redirect(url_for('index'))
         else:
             flash('Incorrect username / password!')
 
@@ -385,7 +411,6 @@ def userpage():
                         'SELECT * FROM hotelDatabase.customer WHERE customerID = %s', (session['id'],)
                     )
                     existing_account = cursor.fetchone()
-
     return render_template('userpage.html', account=account, user=existing_account)
 
 
@@ -486,40 +511,36 @@ def userPagePassword():
 
 @app.route('/hotelBooking', methods=['POST', 'GET'])
 def hotelbooking():
-    check_in = session.get('checkin')
-    check_out = session.get('checkout')
-    date_duration = session.get('duration')
+    if request.form.get('roomprice') is not None:
+        session['price'] = request.form.get('roomprice')
+        session['roomtype'] = request.form.get('roomtype')
+
     if 'loggedin' in session and session['loggedin']:
         account = session['username']
     else:
-        account = ""
+        flash('Login required')
+        return redirect(url_for('login'))
+    
+    if request.method == 'GET':
+        print(request.form.get('chosen_room'))
 
     if request.method == 'POST':
+        tprice = session['price'].split()[0][1:]
+        print(tprice, session['roomtype'])
+        
         cursor = mysql.connection.cursor()
 
-        rtype = 'single'
-        t_price = '10'
-        n_pax = '1'
-        r_d = session.get('room_data')
-        t_room = session.get('rooms')
-
-        # for room_num in range(1, int(session['rooms']) + 1):
-        #     x = r_d.get(f'room_{room_num}')
-        #     print(x.get('adults'), x.get('child'), x.get('childage'))
-
-        if check_in is None:
+        if session['checkin'] is None:
             flash('Please enter Detail in the Homepage!')
-        elif check_out is None:
-            flash('Please enter Detail in the Homepage!')
-        elif date_duration is None:
+        elif session['checkout'] is None:
             flash('Please enter Detail in the Homepage!')
         else:
-            print(rtype, t_price, n_pax, check_in, check_out, date_duration, r_d)
             cursor.execute(
                 'INSERT into hotelDatabase.booking VALUES( NULL, %s, %s, %s, %s, %s, %s, %s, %s)',
-                (session['id'], session['p_id'], rtype, n_pax, t_price, check_in, check_out, date_duration)
+                (session['id'], session['p_id'], session['roomtype'], session['adults'] + session['child'], tprice, session['checkin'], session['checkout'],session["duration"],)
             )
             mysql.connection.commit()
+            return redirect(url_for('userBookings'))
 
     return render_template('hotelBooking.html')
 
