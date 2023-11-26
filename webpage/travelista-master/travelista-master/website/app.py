@@ -121,7 +121,8 @@ def hotels():
         cursor.execute(
                 'SELECT * FROM hotelDatabase.hotels h JOIN hotelDatabase.region r ON h.gaiaId = r.gaiaId WHERE r.regionName LIKE %s;',
                 ("%" + session['country'] + "%",))
-        hotel_list = cursor.fetchall()
+        rows = cursor.fetchall()
+        hotel_list = [list(row) for row in rows]
         for hotel in hotel_list:
             json_temp['propertyId'] = str(hotel[1]) #change the name in the jsontemp 
             json_temp['destination']['regionId'] = str(hotel[0]) # change the region if for each temp
@@ -165,12 +166,10 @@ def hotels():
                         room_counter += 1
                     if len(units_data['room1']) != 0:
                         json_units_data = json.dumps(units_data)
-                        print("start")
                         cursor.execute(
                             'INSERT INTO hotelDatabase.cache_collection VALUES (%s, %s, %s, %s, %s, %s)',
                             (hotel[1],session['checkin'], session['checkout'], session['adults'], session['child'], json_units_data,)
                         )
-                        print("stop")
                         mysql.connection.commit()
                     else:
                         try:
@@ -180,12 +179,15 @@ def hotels():
             
             cursor.execute('''SELECT
                            response -> "$.room1[1]" 
-                           FROM hotelDatabase.cache_collection;''')
+                           FROM hotelDatabase.cache_collection WHERE propertyId = %s and checkIn = %s and checkOut = %s and adult = %s and child = %s;''',
+                           (hotel[1],session['checkin'], session['checkout'], session['adults'], session['child'],))
             hprice = cursor.fetchone()
-            hprice = hprice[0]
-            hlist = list(hotel)
-            hlist.append(hprice)
-            hotel = tuple(hlist)
+            try:
+                hprice = hprice[0]
+                hotel.append(hprice)
+            except TypeError:
+                print(hotel[1])
+        
         session['hotel_list'] = hotel_list
             
 
